@@ -1,10 +1,14 @@
 package qyw.xhx.zwzs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,22 +21,41 @@ import android.view.View;
 import android.text.InputType;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import qyw.xhx.zwzs.util.App_version;
+import qyw.xhx.zwzs.util.MessageTransmit;
 import qyw.xhx.zwzs.widget.LoadingDialog;
 import qyw.xhx.zwzs.util.Base64Utils;
 import qyw.xhx.zwzs.util.SharedPreferencesUtils;
 import qyw.xhx.zwzs.util.APKVersionCodeUtils;
 
+import qyw.xhx.zwzs.util.MessageTransmit;
+import qyw.xhx.zwzs.util.DateUtil;
 
 
 public class MainActivity extends Activity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener{
@@ -53,6 +76,22 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
     private String versionCode;
     private String versionName;
     private int bz;
+
+
+    private Socket mSocket;
+    private BufferedReader mReader = null;
+    private OutputStream mWriter = null;
+    private MessageTransmit mTransmit;
+
+    private static final String SOCKET_IP = "122.80.61.118";
+    private static final int SOCKET_PORT = 9050;
+
+//    private MessageTransmit handler = new MessageTransmit(this);
+
+    private int nowi;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +101,10 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
         versionCode = APKVersionCodeUtils.getVersionCode(this) + "";
         versionName = APKVersionCodeUtils.getVerName(this);
         myversionid.setText("版本:"+versionCode+"    版本名称:"+versionName);
-
         sendVersionRequest();
         initData();
-
-
+//        mTransmit=new MessageTransmit();
+//        new Thread(mTransmit).start();
     }
 
     private void sendVersionRequest(){
@@ -297,33 +335,39 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
             showToast("你输入的密码为空！");
             return;
         }
-        //登录一般都是请求服务器来判断密码是否正确，要请求网络，要子线程
+
+
+        // 启动一条子线程来读取服务器的返回数据
+
+
+
+    //登录一般都是请求服务器来判断密码是否正确，要请求网络，要子线程
 //        showLoading();//显示加载框
         Thread loginRunnable = new Thread() {
-
             @Override
             public void run() {
                 super.run();
                 setLoginBtnClickable(false);//点击登录后，设置登录按钮不可点击状态
-
-
                 //睡眠3秒
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                //服务器验证**********
+                //先获取服务器验证码,已经在子线程中了
+                initSocket(getAccount(),getPassword());
 
-                //判断账号和密码
-                if (getAccount().equals("csdn") && getPassword().equals("123456")) {
-                    showToast("登录成功");
-                    loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
-
-                    startActivity(new Intent(MainActivity.this, Main_view.class));
-                    finish();//关闭页面
-                } else {
-                    showToast("输入的登录账号或密码不正确");
-                }
+                //**************************************
+//                try {
+//                    Thread.sleep(3000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                //判断账号和密码
+//                if (getAccount().equals("csdn") && getPassword().equals("123456")) {
+//                    showToast("登录成功");
+//                    loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
+//                    startActivity(new Intent(MainActivity.this, Main_view.class));
+//                    finish();//关闭页面
+//                } else {
+//                    showToast("输入的登录账号或密码不正确");
+//                }
 
                 setLoginBtnClickable(true);  //这里解放登录按钮，设置为可以点击
                 hideLoading();//隐藏加载框
@@ -333,6 +377,84 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
 
 
     }
+    /*************************/
+    //connect
+    private void initSocket(String us,String ps) {
+        mSocket = new Socket();
+        String nowyear=DateUtil.getNowYear();
+        Log.d("yyyy",nowyear);
+        int ny;
+        ny = Integer.parseInt(nowyear);
+//        Log.d("username",us);
+//        Log.d("password",ps);
+
+        try {
+            mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
+            mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+            mWriter = mSocket.getOutputStream();
+            String content = mReader.readLine();
+            JSONObject jsonObject = new JSONObject(content);
+            int key= jsonObject.getInt("key");
+//            Log.d("key",Integer.toString(key));
+            Log.d("第一次",content);
+            if (content!=null){
+                //发送验证信息
+                int jiami=ny+key;
+                JSONObject fanhui = new JSONObject();
+                fanhui.put("askey", jiami);
+                fanhui.put("number", us);
+                fanhui.put("password", ps);
+                fanhui.put("action", "login");
+//                System.out.println(fanhui.toString(1));
+
+
+
+                mWriter.write(fanhui.toString(1).getBytes());
+                String content1 = mReader.readLine();
+                Log.d("第二次",content1);
+//                解析
+                JSONObject jsonObject_ok = new JSONObject(content1);
+                String content2= jsonObject_ok.getString("content");
+                String zwwg= jsonObject_ok.getString("zwwg");
+                Log.d("pass",content2);
+                Log.d("zwwg",zwwg);
+                if (content2.equals("PASS")){
+                    showToast("登录成功");
+                    loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
+                    startActivity(new Intent(MainActivity.this, Main_view.class));
+                    finish();//关闭页面
+                }
+                if (content2.equals("NPASS")){
+                    showToast("用户名或者密码错误");
+                }
+            }
+//            yanzheng(us,ps);
+//            Looper.prepare();
+//            Looper.loop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+//    public static Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+////            Log.d(TAG, "handleMessage: "+msg.obj);
+////            if (tv_socket != null) {
+//                String desc = String.format("%s 收到服务器的应答消息：%s",
+//                        DateUtil.getNowTime(), msg.obj.toString());
+//                Log.d("11111111",desc);
+////                tv_socket.setText(desc);
+//
+//        }
+//    };
+
+
+
+
     /**
      * 获取账号
      */
@@ -476,4 +598,6 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
     }
 
 
+    public void handleMessage(Message msg) {
+    }
 }

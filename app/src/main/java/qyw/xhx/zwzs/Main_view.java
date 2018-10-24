@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Adapter;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class Main_view extends AppCompatActivity {
+
+    public MyApplication myApplication;//初始化全局变量
     ViewPager mainActivityViewPager;
     BottomNavigationView bottomNavView;
     MainActivityViewPagerAdapter adapter;
@@ -27,6 +30,10 @@ public class Main_view extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        Log.i("菜单页面", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+
+
 //        获取到两个控件的对象
         mainActivityViewPager = (ViewPager) findViewById(R.id.main_viewpager);
         bottomNavView = (BottomNavigationView) findViewById(R.id.main_bottom_nav_view);
@@ -81,4 +88,16 @@ public class Main_view extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // TODO Auto-generated method stub
+//        if(mainActivityViewPager.getCurrentItem()==1){
+//            Home_fragment2.clickBack(keyCode, event);
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+
 }

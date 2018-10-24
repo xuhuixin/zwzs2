@@ -59,6 +59,8 @@ import qyw.xhx.zwzs.util.DateUtil;
 
 
 public class MainActivity extends Activity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener{
+
+    private MyApplication myApplication;//初始化全局变量
     //布局内的控件
     private EditText et_name;
     private EditText et_password;
@@ -96,6 +98,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        Log.i("登陆页面", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+
         initViews();
         setupEvents();
         versionCode = APKVersionCodeUtils.getVersionCode(this) + "";
@@ -416,10 +421,13 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
                 JSONObject jsonObject_ok = new JSONObject(content1);
                 String content2= jsonObject_ok.getString("content");
                 String zwwg= jsonObject_ok.getString("zwwg");
+                String number= jsonObject_ok.getString("number");
                 Log.d("pass",content2);
                 Log.d("zwwg",zwwg);
+                Log.d("number",number);
                 if (content2.equals("PASS")){
                     showToast("登录成功");
+                    myApplication.setNumber(number);
                     loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
                     startActivity(new Intent(MainActivity.this, Main_view.class));
                     finish();//关闭页面

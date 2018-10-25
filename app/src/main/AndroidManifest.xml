@@ -31,6 +31,14 @@
         <activity android:name=".LoginAfterActivity"/>
         <activity android:name=".Main_view"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".wh.Pon_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_PON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

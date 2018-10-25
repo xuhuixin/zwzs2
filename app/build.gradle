@@ -20,7 +20,9 @@ android {
         main {
             res.srcDirs =
                     [
+                            'src/main/res/layout',
                             'src/main/res/layout/zy_layout',
+                            'src/main/res/layout/wh_layout',
                             'src/main/res'
                     ]
         }

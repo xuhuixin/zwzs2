@@ -1,23 +1,12 @@
 package qyw.xhx.zwzs;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 
 public class Main_view extends AppCompatActivity {
 
@@ -42,7 +31,7 @@ public class Main_view extends AppCompatActivity {
 //        为Adapter添加Fragment
         adapter.addFragment(new Zy_fragment()); //添加第一个碎片资源
         adapter.addFragment(new Home_fragment2());
-        adapter.addFragment(new Home_fragment3());
+        adapter.addFragment(new Wh_fragment());
         mainActivityViewPager.setAdapter(adapter);
 
 //        为 BottomNavigationView 的菜单项  设置监听事件

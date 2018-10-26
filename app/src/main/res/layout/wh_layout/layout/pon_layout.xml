@@ -47,10 +47,22 @@
 
 
     </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/pon_chaxun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="正在查询，请稍后...."
+        android:visibility="gone"
+    />
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
     </ListView>
 

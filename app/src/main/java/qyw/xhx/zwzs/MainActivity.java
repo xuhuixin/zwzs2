@@ -148,6 +148,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
         myversionname.setText("服务器版本:"+bbcode);
 
         bz = compareVersion(bbcode,versionCode);
+
+        Log.d("aaaaaaaaa",bbcode+"--------"+versionCode);
 //        0代表相等，1代表version1大于version2，-1代表version1小于version2
         Log.d("ddddd","" + bz);
         //如果版本大，弹窗更新

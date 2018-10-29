@@ -23,7 +23,7 @@ public class DkmAdapter extends ListViewAdapter<Dkm> {
         ((TextView) holder.getView(R.id.cover_type)).setText(dkm.getCOVER_TYPE());
         ((TextView) holder.getView(R.id.cover_device)).setText(dkm.getCOVER_DEVICE());
         ((TextView) holder.getView(R.id.cover_port)).setText(dkm.getCOVER_PORT());
-        ((TextView) holder.getView(R.id.flow_tiele)).setText(dkm.getFLOW_TITLE());
+        ((TextView) holder.getView(R.id.flow_title)).setText(dkm.getFLOW_TITLE());
         ((TextView) holder.getView(R.id.end_time)).setText(dkm.getEND_TIME());
         ((TextView) holder.getView(R.id.ahthor_value)).setText(dkm.getAHTHOR_VALUE());
         ((TextView) holder.getView(R.id.grid_name)).setText(dkm.getGRID_NAME());

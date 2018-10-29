@@ -178,7 +178,7 @@
             android:layout_gravity="center_vertical"
             android:text="工单类型"/>
         <TextView
-            android:id="@+id/flow_tiele"
+            android:id="@+id/flow_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"

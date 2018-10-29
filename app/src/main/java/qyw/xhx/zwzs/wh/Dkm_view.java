@@ -147,8 +147,11 @@ public class Dkm_view extends AppCompatActivity {
                 viewHolder.cover_device =(TextView)convertView.findViewById(R.id.cover_device);
                 viewHolder.fgqid =(ImageView) convertView.findViewById(R.id.fgqid);
                 viewHolder.cover_port =(TextView) convertView.findViewById(R.id.cover_port);
-                viewHolder.flow_tiele =(TextView) convertView.findViewById(R.id.flow_tiele);
+                viewHolder.flow_title =(TextView) convertView.findViewById(R.id.flow_title);
                 viewHolder.end_time =(TextView) convertView.findViewById(R.id.end_time);
+                viewHolder.ahthor_value =(TextView) convertView.findViewById(R.id.ahthor_value);
+                viewHolder.grid_name =(TextView) convertView.findViewById(R.id.grid_name);
+                viewHolder.full_addr =(TextView) convertView.findViewById(R.id.full_addr);
                 convertView.setTag(viewHolder);
                 viewHolder.fgqid.setTag(position);
             }else {
@@ -158,14 +161,18 @@ public class Dkm_view extends AppCompatActivity {
             viewHolder.cover_type.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_type"));
             viewHolder.cover_device.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_device"));
             viewHolder.cover_port.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_port"));
-            viewHolder.flow_tiele.setText((String)((HashMap)dkmArrayList.get(position)).get("flow_tiele"));
+            viewHolder.flow_title.setText((String)((HashMap)dkmArrayList.get(position)).get("flow_title"));
             viewHolder.end_time.setText((String)((HashMap)dkmArrayList.get(position)).get("end_time"));
+            viewHolder.ahthor_value.setText((String)((HashMap)dkmArrayList.get(position)).get("ahthor_value"));
+            viewHolder.grid_name.setText((String)((HashMap)dkmArrayList.get(position)).get("grid_name"));
+            viewHolder.full_addr.setText((String)((HashMap)dkmArrayList.get(position)).get("full_addr"));
             viewHolder.fgqid.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int downLoadPosition =(Integer)v.getTag();
+                    String hold_pos_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("hold_pos_id");
 //                    打印一下
-                    Log.d("点击了","aaaaaaaaaaaa");
+                    Log.d("点击了",hold_pos_id);
                 }
             });
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -181,12 +188,15 @@ public class Dkm_view extends AppCompatActivity {
     // 重新找到控件，然后进行控件的赋值以及事件相应设置。这样其实在做重复的事情)
     class ViewHolder{
         TextView zh_label;
+        TextView flow_title;
         TextView cover_type;
         TextView cover_device;
         ImageView fgqid;
         TextView cover_port;
-        TextView flow_tiele;
         TextView end_time;
+        TextView ahthor_value;
+        TextView grid_name;
+        TextView full_addr;
 
     }
     //根据传入的地址从服务器查询数据
@@ -256,8 +266,12 @@ public class Dkm_view extends AppCompatActivity {
             dkmMap.put("full_addr",dkm.getFULL_ADDR());
             dkmMap.put("cover_device",dkm.getCOVER_DEVICE());
             dkmMap.put("cover_port",dkm.getCOVER_PORT());
-            dkmMap.put("flow_tiele",dkm.getFLOW_TITLE());
+            dkmMap.put("flow_title",dkm.getFLOW_TITLE());
             dkmMap.put("end_time",dkm.getEND_TIME());
+            dkmMap.put("ahthor_value",dkm.getAHTHOR_VALUE());
+            dkmMap.put("grid_name",dkm.getGRID_NAME());
+            dkmMap.put("cover_type",dkm.getCOVER_TYPE());
+            dkmMap.put("hold_pos_id",dkm.getHOLD_POS_ID());
             dkmArrayList.add(dkmMap);
 //            dkm = new Dkm(dkm.getZH_LABEL(),dkm.getFULL_ADDR(),dkm.getFLOWID(),
 //                    dkm.getCOVER_DEVICE(),dkm.getCOVER_PORT(),dkm.getGRID_NAME(),

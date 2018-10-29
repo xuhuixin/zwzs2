@@ -1,15 +1,21 @@
 package qyw.xhx.zwzs.wh;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +34,13 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.MyBaseAdapter;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
@@ -41,28 +49,22 @@ import qyw.xhx.zwzs.util.MessageTransmit;
 
 public class Dkm_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
-    private ListView listView;
+//    private ListView listView;
     private Button dkmbutton;
     private Button backbtn;
     private TextView fgqchaxun;
     private List<Dkm> mDatas;
     private DkmAdapter dkmAdapter;
     private EditText dkmeditText;
-
+    private ListView mListView;
     private Handler handler=null;
 
     private String url;
     private String key;
     private String message;
     private String id;
-
-    private Socket mSocket;
-    private BufferedReader mReader = null;
-    private OutputStream mWriter = null;
-    private MessageTransmit mTransmit;
-
-    private static final String SOCKET_IP = "122.80.61.118";
-    private static final int SOCKET_PORT = 9051;
+    private ArrayList dkmArrayList;
+    private HashMap dkmMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,17 @@ public class Dkm_view extends AppCompatActivity {
         setContentView(R.layout.dkm_layout);
         //创建属于主线程的handler
         handler=new Handler();
+        dkmArrayList = new ArrayList();
         initView();
+        if(dkmAdapter==null){
+            dkmAdapter = new DkmAdapter(this,dkmArrayList);
+        }else {
+            //刷新适配器,不用每次都new SongAdapter(this,songArrayList)
+            dkmAdapter.notifyDataSetChanged();
+        }
+        mListView.setAdapter(dkmAdapter);
+
+
 
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,144 +94,101 @@ public class Dkm_view extends AppCompatActivity {
         dkmbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                id =dkmeditText.getText().toString();
-                if (id.equals("")){
-                    Toast.makeText(Dkm_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
-                }else{
-                    initData(id);
-//                    fgqchaxun.setVisibility(View.GONE);
-                    listView.setVisibility(View.VISIBLE);
-                    Toast.makeText(Dkm_view.this, "有输入", Toast.LENGTH_SHORT).show();
-                }
-
+            id =dkmeditText.getText().toString();
+            if (id.equals("")){
+                Toast.makeText(Dkm_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
+            }else{
+                initData(id);
+                mListView.setVisibility(View.VISIBLE);
+                Toast.makeText(Dkm_view.this, "有输入", Toast.LENGTH_SHORT).show();
+            }
             }
         });
-
 
     }
     //方法：初始化View
     private void initView() {
-        listView = (ListView) findViewById(R.id.fgq_list_view);
+        mListView = (ListView) findViewById(R.id.fgq_list_view);
         dkmbutton=(Button) findViewById(R.id.dkm_search);
         dkmeditText=(EditText) findViewById(R.id.dkm);
-        fgqchaxun=(TextView) findViewById(R.id.fgq_chaxun);
-        fgqchaxun.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        fgqchaxun=(TextView) findViewById(R.id.fgq_chaxun);
+//        fgqchaxun.setMovementMethod(ScrollingMovementMethod.getInstance());
         backbtn=(Button) findViewById(R.id.back_button);
 
     }
     //方法；初始化Data
     private void initData(String id) {
-        mDatas = new ArrayList<Dkm>();
+//        mDatas = new ArrayList<Dkm>();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-//        Log.e("msg", t);
         key=Md5Utils.md5("khsl"+format.format(new Date()));
         Log.d("key=",key);
         Log.d("输入",dkmeditText.getText().toString());
         url="https://ai.iorai.com/webservice/newjk.ashx?type=khsl_new&id="+dkmeditText.getText().toString()+"&key="+key;
         queryFromServer(url,"county");
-        //将数据装到集合中去
-//        County county = new County("天桥","小区数", "楼数", "房号数", "分光器数");
-//        mDatas.add(county);
-        //为数据绑定适配器
-        dkmAdapter = new DkmAdapter(this,mDatas);
-        listView.setAdapter(dkmAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Olt olt =mDatas.get(position);
-////                Log.d("IP",olt.getDEV_IPADDR());
-////                Log.d("厂家",olt.getVENDOR());
-//                olt_mc=olt.getUSER_LABEL();
-//                olt_ip=olt.getDEV_IPADDR();
-//                olt_cj=olt.getVENDOR();
-
-                //跳转Zone_view.class
-//                Intent intent = new Intent(Pon_view.this,Zone_view.class);
-//                intent.putExtra("county_id",county.getCOUNTY_ID());
-//                startActivity(intent);
-                //需要查询等待showProgressDialog
-//                将listview显示出来，同时listview 设为gone
-//                ponchaxun.setVisibility(View.VISIBLE);
-//                ponchaxun.setText("正在查询，请稍后....");
-//                listView.setVisibility(View.INVISIBLE);
-//                需要在线程中
-//                Thread loginRunnable = new Thread() {
-//                    @Override
-//                    public void run() {
-//                        super.run();
-//                        initSocket(olt_ip,olt_cj);
-//                    }
-//                };
-//                loginRunnable.start();
-//
-//                Toast.makeText(Dkm_view.this,olt.getDEV_IPADDR(),Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
-    private void initSocket(String olt_ip,String olt_cj) {
-        mSocket = new Socket();
-        String nowyear=DateUtil.getNowYear();
-        Log.d("yyyy",nowyear);
-        int ny;
-        ny = Integer.parseInt(nowyear);
-//        Log.d("username",us);
-//        Log.d("password",ps);
-
-        try {
-            mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
-            mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-            mWriter = mSocket.getOutputStream();
-            String content = mReader.readLine();
-            JSONObject jsonObject = new JSONObject(content);
-            int key= jsonObject.getInt("key");
-//            Log.d("key",Integer.toString(key));
-            Log.d("第一次",content);
-            if (content!=null){
-                //发送验证信息
-                int jiami=ny+key;
-                JSONObject fanhui = new JSONObject();
-                fanhui.put("askey", jiami);
-                fanhui.put("action", "olt");
-                fanhui.put("ip", olt_ip);
-                fanhui.put("cj", olt_cj);
-                System.out.println(fanhui.toString(1));
-                mWriter.write(fanhui.toString(1).getBytes());
-                String content1 = mReader.readLine();
-                Log.d("第二次",content1);
-//                解析
-                JSONObject jsonObject_ok = new JSONObject(content1);
-                String result= jsonObject_ok.getString("result");
-                message= jsonObject_ok.getString("message");
-//                String number= jsonObject_ok.getString("number");
-                Log.d("result",result);
-                Log.d("message",message);
-//                Log.d("number",number);
-                if (result.equals("success")){
-                    message=message.replace(",","\n\n");
-//                    message="OLT名称:"+olt_mc+"\n\n"+message;
-
-                    handler.post(runnableUi);
-                }
-//                if (content2.equals("NPASS")){
-//                    showToast("用户名或者密码错误");
-//                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    class DkmAdapter extends MyBaseAdapter<ArrayList> {
+        private Context context;
+        DkmAdapter(Context c,ArrayList arrayList){
+            super(arrayList);
+            context=c;
         }
-    }
-    // 构建Runnable对象，在runnable中更新界面
-    Runnable runnableUi=new Runnable() {
+        //重用了convertView，很大程度上的减少了内存的消耗。通过判断convertView是否为null，
+        // 是的话就需要产生一个视图出来，然后给这个视图数据，最后将这个视图返回给底层，呈献给用户。
         @Override
-        public void run() {
-            //更新界面
-//            ponchaxun.setText(message);
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if(convertView==null){
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView =inflater.inflate(R.layout.dkm_item,null);
+                viewHolder = new ViewHolder();
+//                viewHolder.singerImageView =(ImageView)convertView.findViewById(R.id.singerImageView);
+                viewHolder.zh_label =(TextView)convertView.findViewById(R.id.zh_label);
+                viewHolder.cover_type =(TextView)convertView.findViewById(R.id.cover_type);
+                viewHolder.cover_device =(TextView)convertView.findViewById(R.id.cover_device);
+                viewHolder.fgqid =(ImageView) convertView.findViewById(R.id.fgqid);
+                viewHolder.cover_port =(TextView) convertView.findViewById(R.id.cover_port);
+                viewHolder.flow_tiele =(TextView) convertView.findViewById(R.id.flow_tiele);
+                viewHolder.end_time =(TextView) convertView.findViewById(R.id.end_time);
+                convertView.setTag(viewHolder);
+                viewHolder.fgqid.setTag(position);
+            }else {
+                viewHolder =(ViewHolder)convertView.getTag();
+            }
+            viewHolder.zh_label.setText((String)((HashMap)dkmArrayList.get(position)).get("zh_label"));
+            viewHolder.cover_type.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_type"));
+            viewHolder.cover_device.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_device"));
+            viewHolder.cover_port.setText((String)((HashMap)dkmArrayList.get(position)).get("cover_port"));
+            viewHolder.flow_tiele.setText((String)((HashMap)dkmArrayList.get(position)).get("flow_tiele"));
+            viewHolder.end_time.setText((String)((HashMap)dkmArrayList.get(position)).get("end_time"));
+            viewHolder.fgqid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int downLoadPosition =(Integer)v.getTag();
+//                    打印一下
+                    Log.d("点击了","aaaaaaaaaaaa");
+                }
+            });
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("点击了","view");
+                }
+            });
+            return convertView;
         }
-    };
+    }
+    //避免了就是每次在getVIew的时候，都需要重新的findViewById，
+    // 重新找到控件，然后进行控件的赋值以及事件相应设置。这样其实在做重复的事情)
+    class ViewHolder{
+        TextView zh_label;
+        TextView cover_type;
+        TextView cover_device;
+        ImageView fgqid;
+        TextView cover_port;
+        TextView flow_tiele;
+        TextView end_time;
 
-
+    }
     //根据传入的地址从服务器查询数据
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
@@ -227,8 +196,6 @@ public class Dkm_view extends AppCompatActivity {
              @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
-                Log.d("bbbbbbbbbbbb",responseText);
-
                 boolean result = false;
                 if ("[]".equals(responseText)){
                     Dkm_view.this.runOnUiThread(new Runnable() {
@@ -236,10 +203,8 @@ public class Dkm_view extends AppCompatActivity {
                         public void run() {
                             closeProgressDialog();
                             Toast.makeText(Dkm_view.this, "未查询到数据", Toast.LENGTH_SHORT).show();
-//                            Adapter.notifyDataSetChanged();
                         }
                     });
-
                 }
                 else {
                     if ("county".equals(type)) {
@@ -255,7 +220,6 @@ public class Dkm_view extends AppCompatActivity {
                          @Override
                          public void run() {
                              closeProgressDialog();
-//                            Adapter.notifyDataSetChanged();
                          }
                      });
                  }
@@ -278,22 +242,29 @@ public class Dkm_view extends AppCompatActivity {
         Gson gson = new Gson();
         /**County类一定注意大写，因为传过来的是大写**/
         List<Dkm> leibiao=gson.fromJson(jsonData,new TypeToken<List<Dkm>>(){}.getType());
-        mDatas.clear();
+        dkmArrayList.clear();
         for (Dkm dkm:leibiao){
             Log.d("MainActivity", "COUNTY_ID is " + dkm.getCOVER_DEVICE());
-
+//            如果是历史库数据重新查询
             if ("0".equals(dkm.getCOVER_DEVICE())){
-                Log.d("aaaaaaaaaaa","aaaaaaaaaaaaaaaaa");
-                Log.d("key1111111",key);
                 url="https://ai.iorai.com/webservice/newjk.ashx?type=khsl_his&id="+dkmeditText.getText().toString()+"&key="+key;
                 queryFromServer(url,"county");
 //                initData(id);
             }
-            dkm = new Dkm(dkm.getZH_LABEL(),dkm.getFULL_ADDR(),dkm.getFLOWID(),
-                    dkm.getCOVER_DEVICE(),dkm.getCOVER_PORT(),dkm.getGRID_NAME(),
-                    dkm.getCOVER_TYPE(),dkm.getEND_TIME(),dkm.getFLOW_TITLE(),
-                    dkm.getHOLD_POS_ID(),dkm.getAHTHOR_VALUE(),dkm.getHOUSE_ID());
-            mDatas.add(dkm);
+            dkmMap = new HashMap();
+            dkmMap.put("zh_label",dkm.getZH_LABEL());
+            dkmMap.put("full_addr",dkm.getFULL_ADDR());
+            dkmMap.put("cover_device",dkm.getCOVER_DEVICE());
+            dkmMap.put("cover_port",dkm.getCOVER_PORT());
+            dkmMap.put("flow_tiele",dkm.getFLOW_TITLE());
+            dkmMap.put("end_time",dkm.getEND_TIME());
+            dkmArrayList.add(dkmMap);
+//            dkm = new Dkm(dkm.getZH_LABEL(),dkm.getFULL_ADDR(),dkm.getFLOWID(),
+//                    dkm.getCOVER_DEVICE(),dkm.getCOVER_PORT(),dkm.getGRID_NAME(),
+//                    dkm.getCOVER_TYPE(),dkm.getEND_TIME(),dkm.getFLOW_TITLE(),
+//                    dkm.getHOLD_POS_ID(),dkm.getAHTHOR_VALUE(),dkm.getHOUSE_ID());
+//            mDatas.add(dkm);
+
         }
         Dkm_view.this.runOnUiThread(new Runnable() {
             @Override

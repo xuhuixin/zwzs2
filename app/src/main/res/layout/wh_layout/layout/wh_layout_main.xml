@@ -12,18 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="PON网络组网架构图"
-        android:textSize="20sp"
+        android:textSize="@dimen/dp_20"
         android:gravity="center"/>
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/whgridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:columnWidth="120dp"
+        android:columnWidth="@dimen/dp_100"
         android:gravity="center"
-        android:horizontalSpacing="1dp"
+        android:horizontalSpacing="@dimen/dp_10"
         android:numColumns="auto_fit"
-        android:stretchMode="spacingWidthUniform"
-        android:verticalSpacing="1dp" />
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="@dimen/dp_10" />
 
 
 </LinearLayout>

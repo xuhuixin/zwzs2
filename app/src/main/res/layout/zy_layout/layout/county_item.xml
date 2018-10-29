@@ -3,7 +3,7 @@
 <!--区县页面布局 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="@dimen/dp_70">
     <ImageView
         android:id="@+id/fruit_image"
         android:layout_width="wrap_content"
@@ -16,8 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:textSize="25sp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:textSize="@dimen/dp_20"
         android:text="hello"
         android:textColor="@color/black"
         />
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp">
+        android:layout_marginLeft="@dimen/dp_5">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/dp_18"
                 android:layout_marginLeft="5sp"
                 android:text="小区数"
                 android:textColor="@color/black"/>
@@ -45,8 +45,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5sp"
-                android:textSize="20sp"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:textSize="@dimen/dp_18"
                 android:text="楼数"
                 android:textColor="@color/black"/>
         </LinearLayout>
@@ -63,8 +63,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5sp"
-                android:textSize="20sp"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:textSize="@dimen/dp_18"
                 android:text="房号数"
                 android:textColor="@color/black"/>
             <TextView
@@ -72,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5sp"
-                android:textSize="20sp"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:textSize="@dimen/dp_18"
                 android:text="分光器数"
                 android:textColor="@color/black"/>
         </LinearLayout>

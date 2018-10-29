@@ -75,11 +75,12 @@ public class Wh_fragment extends Fragment {
                         /**打开区县class，intent 需在androidMainfest.xml中注册**/
                         Intent intent =new Intent("qyw.xhx.zwzs.ACTION_PON");
                         startActivity(intent);
-
 //                        Toast.makeText(mContext, name[position], Toast.LENGTH_LONG).show();
 //                Log.d("dianji","denglu");
                         break;
                     case 1:
+                        Intent intent1 =new Intent("qyw.xhx.zwzs.ACTION_DKM");
+                        startActivity(intent1);
 //                        Toast.makeText(mContext, name[position], Toast.LENGTH_LONG).show();
 //                Log.d("dianji","denglu");
                         break;

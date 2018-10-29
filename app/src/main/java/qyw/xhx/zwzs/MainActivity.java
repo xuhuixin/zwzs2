@@ -138,14 +138,19 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
         List<App_version> appList =gson.fromJson(jsonDate, new TypeToken<List<App_version>>()
         {}.getType());
         for (App_version app:appList){
-//            Log.d("MainActivity","aaa"+app.getApkname());
-//            Log.d("MainActivity","bbbb"+app.getAppname());
+
             bbcode=app.getVerCode();
             bbnr=app.getVerInfo();
             bburl=app.getApkurl();
         }
-        //获取网络版本json
-        myversionname.setText("服务器版本:"+bbcode);
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //获取网络版本json
+                myversionname.setText("服务器版本:"+bbcode);
+            }
+        });
+
 
         bz = compareVersion(bbcode,versionCode);
 

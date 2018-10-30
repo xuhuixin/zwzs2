@@ -347,12 +347,6 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
             showToast("你输入的密码为空！");
             return;
         }
-
-
-        // 启动一条子线程来读取服务器的返回数据
-
-
-
     //登录一般都是请求服务器来判断密码是否正确，要请求网络，要子线程
 //        showLoading();//显示加载框
         Thread loginRunnable = new Thread() {
@@ -364,23 +358,6 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
                 //服务器验证**********
                 //先获取服务器验证码,已经在子线程中了
                 initSocket(getAccount(),getPassword());
-
-                //**************************************
-//                try {
-//                    Thread.sleep(3000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                //判断账号和密码
-//                if (getAccount().equals("csdn") && getPassword().equals("123456")) {
-//                    showToast("登录成功");
-//                    loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
-//                    startActivity(new Intent(MainActivity.this, Main_view.class));
-//                    finish();//关闭页面
-//                } else {
-//                    showToast("输入的登录账号或密码不正确");
-//                }
-
                 setLoginBtnClickable(true);  //这里解放登录按钮，设置为可以点击
                 hideLoading();//隐藏加载框
             }
@@ -450,24 +427,6 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
             e.printStackTrace();
         }
     }
-
-
-
-
-//    public static Handler mHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-////            Log.d(TAG, "handleMessage: "+msg.obj);
-////            if (tv_socket != null) {
-//                String desc = String.format("%s 收到服务器的应答消息：%s",
-//                        DateUtil.getNowTime(), msg.obj.toString());
-//                Log.d("11111111",desc);
-////                tv_socket.setText(desc);
-//
-//        }
-//    };
-
-
 
 
     /**

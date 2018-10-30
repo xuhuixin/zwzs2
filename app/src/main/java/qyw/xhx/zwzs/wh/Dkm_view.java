@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -46,10 +47,13 @@ import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
 import qyw.xhx.zwzs.util.MessageTransmit;
+import qyw.xhx.zwzs.widget.LoadingDialog;
+import qyw.xhx.zwzs.zy.County_view;
+import qyw.xhx.zwzs.zy.Zone_view;
 
 public class Dkm_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
-//    private ListView listView;
+    //    private ListView listView;
     private Button dkmbutton;
     private Button backbtn;
     private TextView fgqchaxun;
@@ -57,6 +61,7 @@ public class Dkm_view extends AppCompatActivity {
     private DkmAdapter dkmAdapter;
     private EditText dkmeditText;
     private ListView mListView;
+
     private Handler handler=null;
 
     private String url;
@@ -94,14 +99,14 @@ public class Dkm_view extends AppCompatActivity {
         dkmbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            id =dkmeditText.getText().toString();
-            if (id.equals("")){
-                Toast.makeText(Dkm_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
-            }else{
-                initData(id);
-                mListView.setVisibility(View.VISIBLE);
-                Toast.makeText(Dkm_view.this, "有输入", Toast.LENGTH_SHORT).show();
-            }
+                id =dkmeditText.getText().toString();
+                if (id.equals("")){
+                    Toast.makeText(Dkm_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
+                }else{
+                    initData(id);
+                    mListView.setVisibility(View.VISIBLE);
+                    Toast.makeText(Dkm_view.this, "有输入", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -109,6 +114,7 @@ public class Dkm_view extends AppCompatActivity {
     //方法：初始化View
     private void initView() {
         mListView = (ListView) findViewById(R.id.fgq_list_view);
+
         dkmbutton=(Button) findViewById(R.id.dkm_search);
         dkmeditText=(EditText) findViewById(R.id.dkm);
 //        fgqchaxun=(TextView) findViewById(R.id.fgq_chaxun);
@@ -173,6 +179,11 @@ public class Dkm_view extends AppCompatActivity {
                     String hold_pos_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("hold_pos_id");
 //                    打印一下
                     Log.d("点击了",hold_pos_id);
+                    //跳转Zone_view.class
+                    Intent intent = new Intent(Dkm_view.this,Cover_view.class);
+                    intent.putExtra("hold_pos_id",hold_pos_id);
+                    startActivity(intent);
+//                    Toast.makeText(Dkm_view.this,"正在查询，请稍后...",Toast.LENGTH_SHORT).show();
                 }
             });
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +214,7 @@ public class Dkm_view extends AppCompatActivity {
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(address, new Callback() {
-             @Override
+            @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 boolean result = false;
@@ -224,19 +235,21 @@ public class Dkm_view extends AppCompatActivity {
                         result = true;
                     }
                 }
-                 if (result) {
-                     Log.d("bbbbbb", "判断是否下载完毕");
-                     Dkm_view.this.runOnUiThread(new Runnable() {
-                         @Override
-                         public void run() {
-                             closeProgressDialog();
-                         }
-                     });
-                 }
+                if (result) {
+                    Log.d("bbbbbb", "判断是否下载完毕");
+                    Dkm_view.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeProgressDialog();
+                        }
+                    });
+                }
             }
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("SHIBAI","网络加载失败");
+                e.printStackTrace();
+
                 // 通过runOnUiThread()方法回到主线程处理逻辑
                 Dkm_view.this.runOnUiThread(new Runnable() {
                     @Override

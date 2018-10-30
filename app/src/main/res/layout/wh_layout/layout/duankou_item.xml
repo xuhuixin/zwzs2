@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--olt list -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/olt_lan"
+            />
+        <TextView
+            android:id="@+id/duankou"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_gravity="center_vertical"
+            android:text="端口"/>
+        <TextView
+            android:id="@+id/zh_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:text="1355317"/>
+        <TextView
+            android:id="@+id/finish_state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:text="1355317"/>
+        <TextView
+            android:id="@+id/time_stamp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="12"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:text="1355317"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+

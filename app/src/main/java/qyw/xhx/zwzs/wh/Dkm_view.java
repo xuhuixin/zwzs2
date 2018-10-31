@@ -41,12 +41,14 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.CommonScanActivity;
 import qyw.xhx.zwzs.MyBaseAdapter;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
 import qyw.xhx.zwzs.util.MessageTransmit;
+import qyw.xhx.zwzs.utils.Constant;
 import qyw.xhx.zwzs.widget.LoadingDialog;
 import qyw.xhx.zwzs.zy.County_view;
 import qyw.xhx.zwzs.zy.Zone_view;
@@ -56,6 +58,7 @@ public class Dkm_view extends AppCompatActivity {
     //    private ListView listView;
     private Button dkmbutton;
     private Button backbtn;
+    private Button saomiaobtn;
     private TextView fgqchaxun;
     private List<Dkm> mDatas;
     private DkmAdapter dkmAdapter;
@@ -66,6 +69,7 @@ public class Dkm_view extends AppCompatActivity {
 
     private String url;
     private String key;
+    private String pwd="";
     private String message;
     private String id;
     private ArrayList dkmArrayList;
@@ -75,10 +79,14 @@ public class Dkm_view extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dkm_layout);
+        //接收传值
+        Intent intent =getIntent();
+        id=intent.getStringExtra("flow_id");
         //创建属于主线程的handler
         handler=new Handler();
         dkmArrayList = new ArrayList();
         initView();
+        initData(id);
         if(dkmAdapter==null){
             dkmAdapter = new DkmAdapter(this,dkmArrayList);
         }else {
@@ -86,35 +94,17 @@ public class Dkm_view extends AppCompatActivity {
             dkmAdapter.notifyDataSetChanged();
         }
         mListView.setAdapter(dkmAdapter);
-
-
-
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-//
-        dkmbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id =dkmeditText.getText().toString();
-                if (id.equals("")){
-                    Toast.makeText(Dkm_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
-                }else{
-                    initData(id);
-                    mListView.setVisibility(View.VISIBLE);
-                    Toast.makeText(Dkm_view.this, "有输入", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
     }
     //方法：初始化View
     private void initView() {
         mListView = (ListView) findViewById(R.id.fgq_list_view);
-
+        saomiaobtn=(Button) findViewById(R.id.dkm_saomiao);
         dkmbutton=(Button) findViewById(R.id.dkm_search);
         dkmeditText=(EditText) findViewById(R.id.dkm);
 //        fgqchaxun=(TextView) findViewById(R.id.fgq_chaxun);
@@ -127,11 +117,13 @@ public class Dkm_view extends AppCompatActivity {
 //        mDatas = new ArrayList<Dkm>();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         key=Md5Utils.md5("khsl"+format.format(new Date()));
-        Log.d("key=",key);
-        Log.d("输入",dkmeditText.getText().toString());
-        url="https://ai.iorai.com/webservice/newjk.ashx?type=khsl_new&id="+dkmeditText.getText().toString()+"&key="+key;
+//        pwd=dkmeditText.getText().toString();
+        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_2&id="+id+"&key="+key;
         queryFromServer(url,"county");
     }
+
+
+
     class DkmAdapter extends MyBaseAdapter<ArrayList> {
         private Context context;
         DkmAdapter(Context c,ArrayList arrayList){
@@ -269,11 +261,6 @@ public class Dkm_view extends AppCompatActivity {
         for (Dkm dkm:leibiao){
             Log.d("MainActivity", "COUNTY_ID is " + dkm.getCOVER_DEVICE());
 //            如果是历史库数据重新查询
-            if ("0".equals(dkm.getCOVER_DEVICE())){
-                url="https://ai.iorai.com/webservice/newjk.ashx?type=khsl_his&id="+dkmeditText.getText().toString()+"&key="+key;
-                queryFromServer(url,"county");
-//                initData(id);
-            }
             dkmMap = new HashMap();
             dkmMap.put("zh_label",dkm.getZH_LABEL());
             dkmMap.put("full_addr",dkm.getFULL_ADDR());

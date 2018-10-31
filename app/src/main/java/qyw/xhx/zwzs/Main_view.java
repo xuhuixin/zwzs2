@@ -29,7 +29,7 @@ public class Main_view extends AppCompatActivity {
         //        为ViewPager设置Adapter
         adapter = new MainActivityViewPagerAdapter(getSupportFragmentManager());
 //        为Adapter添加Fragment
-        adapter.addFragment(new Zy_fragment()); //添加第一个碎片资源
+        adapter.addFragment(new Zy_fragment_new()); //添加第一个碎片资源
         adapter.addFragment(new Home_fragment2());
         adapter.addFragment(new Wh_fragment());
         mainActivityViewPager.setAdapter(adapter);

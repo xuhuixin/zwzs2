@@ -26,38 +26,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ic_back"/>
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-        <EditText
-        android:id="@+id/dkm"
-        android:layout_width="0dp"
-            android:layout_height="36dip"
-            android:padding="5dip"
-            android:layout_marginLeft="5dp"
-        android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_edittext"
-            android:hint="请输入账号或者鉴权码"/>
-        <Button
-            android:id="@+id/dkm_search"
-            android:layout_width="@dimen/dp_30"
-            android:layout_height="@dimen/dp_30"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/search"
-            android:text=""/>
-        <Button
-            android:id="@+id/dkm_saomiao"
-            android:layout_width="@dimen/dp_30"
-            android:layout_height="@dimen/dp_30"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ewm"
-            android:text=""/>
 
-    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -65,14 +34,6 @@
         android:layout_marginTop="5dp">
     </View>
 
-    <TextView
-        android:id="@+id/fgq_chaxun"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/dp_15"
-        android:text="正在查询，请稍后...."
-        android:visibility="gone"
-    />
 
     <ListView
         android:id="@+id/fgq_list_view"

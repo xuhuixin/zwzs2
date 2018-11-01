@@ -276,7 +276,10 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
                     new SharedPreferencesUtils.ContentValue("remenberPassword", false),
                     new SharedPreferencesUtils.ContentValue("autoLogin", false),
                     new SharedPreferencesUtils.ContentValue("name", ""),
-                    new SharedPreferencesUtils.ContentValue("password", ""));
+                    new SharedPreferencesUtils.ContentValue("password", ""),
+                    new SharedPreferencesUtils.ContentValue("city", ""),
+                    new SharedPreferencesUtils.ContentValue("server_url", ""));
+
             return true;
         }
         return false;
@@ -406,12 +409,20 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
                 String content2= jsonObject_ok.getString("content");
                 String zwwg= jsonObject_ok.getString("zwwg");
                 String number= jsonObject_ok.getString("number");
-                Log.d("pass",content2);
-                Log.d("zwwg",zwwg);
-                Log.d("number",number);
+                String city= jsonObject_ok.getString("city");
+                String city_id= jsonObject_ok.getString("city_id");
+                String server_url= jsonObject_ok.getString("server_url");
+//                Log.d("pass",content2);
+//                Log.d("zwwg",zwwg);
+//                Log.d("number",number);
+//                Log.d("city",city);
+//                Log.d("server_url",server_url);
                 if (content2.equals("PASS")){
                     showToast("登录成功");
                     myApplication.setNumber(number);
+                    myApplication.setCity(city);
+                    myApplication.setCity_id(city_id);
+                    myApplication.setServer_url(server_url);
                     loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
                     startActivity(new Intent(MainActivity.this, Main_view.class));
                     finish();//关闭页面

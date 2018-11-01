@@ -37,6 +37,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
@@ -55,19 +56,21 @@ public class Pon_view extends AppCompatActivity {
     private List<Olt> mDatas;
     private OltAdapter oltAdapter;
     private EditText olteditText;
-
     private Handler handler=null;
 
     private String olt_ip;
     private String olt_cj;
     private String olt_mc;
     private String message;
+    private String number;
+    private String city;
+    private String server_url;
 
     private Socket mSocket;
     private BufferedReader mReader = null;
     private OutputStream mWriter = null;
     private MessageTransmit mTransmit;
-
+    private MyApplication myApplication;//初始化全局变量
     private static final String SOCKET_IP = "122.80.61.118";
     private static final int SOCKET_PORT = 9051;
 
@@ -75,6 +78,13 @@ public class Pon_view extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pon_layout);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        number=myApplication.getNumber();
+        city=myApplication.getCity();
+        server_url=myApplication.getServer_url();
+        Log.i("PON口查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+        Log.i("PON口查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+
         //创建属于主线程的handler
         handler=new Handler();
         initView();
@@ -89,14 +99,19 @@ public class Pon_view extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String id =olteditText.getText().toString();
-                if (id.equals("")){
-                    Toast.makeText(Pon_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
-                }else{
-                    initData(id);
-                    ponchaxun.setVisibility(View.GONE);
-                    listView.setVisibility(View.VISIBLE);
-                    Toast.makeText(Pon_view.this, "有输入", Toast.LENGTH_SHORT).show();
+                if (city.equals("济南")){
+                    if (id.equals("")){
+                        Toast.makeText(Pon_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
+                    }else{
+                        initData(id);
+                        ponchaxun.setVisibility(View.GONE);
+                        listView.setVisibility(View.VISIBLE);
+                        Toast.makeText(Pon_view.this, "有输入", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(Pon_view.this, "非济南账号，无法使用", Toast.LENGTH_SHORT).show();
                 }
+
 
             }
         });
@@ -120,9 +135,10 @@ public class Pon_view extends AppCompatActivity {
         String t=format.format(new Date());
 //        Log.e("msg", t);
         String key=Md5Utils.md5("khsl"+t);
-        Log.d("key=",key);
-        Log.d("输入",olteditText.getText().toString());
-        queryFromServer("https://ai.iorai.com/webservice/newjk.ashx?type=531_olt&key="+key+"&id="+olteditText.getText().toString() , "county");
+//        Log.d("key=",key);
+//        Log.d("输入",olteditText.getText().toString());
+//        Log.d("url",server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString());
+        queryFromServer(server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString() , "county");
         //将数据装到集合中去
 //        County county = new County("天桥","小区数", "楼数", "房号数", "分光器数");
 //        mDatas.add(county);
@@ -139,10 +155,6 @@ public class Pon_view extends AppCompatActivity {
                 olt_ip=olt.getDEV_IPADDR();
                 olt_cj=olt.getVENDOR();
 
-                //跳转Zone_view.class
-//                Intent intent = new Intent(Pon_view.this,Zone_view.class);
-//                intent.putExtra("county_id",county.getCOUNTY_ID());
-//                startActivity(intent);
                 //需要查询等待showProgressDialog
 //                将listview显示出来，同时listview 设为gone
                 ponchaxun.setVisibility(View.VISIBLE);
@@ -169,8 +181,6 @@ public class Pon_view extends AppCompatActivity {
         Log.d("yyyy",nowyear);
         int ny;
         ny = Integer.parseInt(nowyear);
-//        Log.d("username",us);
-//        Log.d("password",ps);
 
         try {
             mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);

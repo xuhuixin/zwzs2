@@ -20,9 +20,10 @@ public class Main_view extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
         myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
-        Log.i("菜单页面", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
-
-
+        //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+        Log.i("菜单页面", "InitLabel:"+myApplication.getNumber());
+        Log.i("菜单页面", "InitLabel:"+myApplication.getCity());
+        Log.i("菜单页面", "InitLabel:"+myApplication.getServer_url());
 //        获取到两个控件的对象
         mainActivityViewPager = (ViewPager) findViewById(R.id.main_viewpager);
         bottomNavView = (BottomNavigationView) findViewById(R.id.main_bottom_nav_view);
@@ -31,7 +32,7 @@ public class Main_view extends AppCompatActivity {
 //        为Adapter添加Fragment
         adapter.addFragment(new Zy_fragment_new()); //添加第一个碎片资源
         adapter.addFragment(new Home_fragment2());
-        adapter.addFragment(new Wh_fragment());
+        adapter.addFragment(new Wh_fragment_new());
         mainActivityViewPager.setAdapter(adapter);
 
 //        为 BottomNavigationView 的菜单项  设置监听事件

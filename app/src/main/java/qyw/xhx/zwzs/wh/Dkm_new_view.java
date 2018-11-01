@@ -24,6 +24,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
@@ -40,11 +41,23 @@ public class Dkm_new_view extends AppCompatActivity {
     private EditText dkmeditText;
     private String key;
     private String id;
+    private MyApplication myApplication;//初始化全局变量
+    private String number;
+    private String city;
+    private String city_id;
+    private String server_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dkm_layout_new);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        number=myApplication.getNumber();
+        city=myApplication.getCity();
+        city_id=myApplication.getCity_id();
+        server_url=myApplication.getServer_url();
+
+
 //        //获取上一页传过来的值
 //        Intent intent =getIntent();
 //        id=intent.getStringExtra("hold_pos_id");
@@ -83,7 +96,7 @@ public class Dkm_new_view extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         key= Md5Utils.md5("khsl"+format.format(new Date()));
         mDatas = new ArrayList<Dkm_new>();
-        queryFromServer("https://ai.iorai.com/webservice/newjk.ashx?type=dkm_1&id="+id+"&key="+key, "county");
+        queryFromServer(server_url+"?type=dkm_sheng1&id="+id+"&key="+key+"&city_id="+city_id, "county");
         //为数据绑定适配器
         dkm_new_adapter = new Dkm_new_Adapter(this, mDatas);
         listView.setAdapter(dkm_new_adapter);

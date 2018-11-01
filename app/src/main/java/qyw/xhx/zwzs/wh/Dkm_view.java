@@ -42,6 +42,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import qyw.xhx.zwzs.CommonScanActivity;
+import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.MyBaseAdapter;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.DateUtil;
@@ -72,13 +73,23 @@ public class Dkm_view extends AppCompatActivity {
     private String pwd="";
     private String message;
     private String id;
+    private String city_id;
     private ArrayList dkmArrayList;
     private HashMap dkmMap;
+    private String number;
+    private String city;
+    private String server_url;
+    private MyApplication myApplication;//初始化全局变量
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dkm_layout);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        number=myApplication.getNumber();
+        city=myApplication.getCity();
+        city_id=myApplication.getCity_id();
+        server_url=myApplication.getServer_url();
         //接收传值
         Intent intent =getIntent();
         id=intent.getStringExtra("flow_id");
@@ -118,7 +129,7 @@ public class Dkm_view extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         key=Md5Utils.md5("khsl"+format.format(new Date()));
 //        pwd=dkmeditText.getText().toString();
-        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_2&id="+id+"&key="+key;
+        url=server_url+"?type=dkm_sheng2&id="+id+"&key="+key+"&city_id="+city_id;
         queryFromServer(url,"county");
     }
 

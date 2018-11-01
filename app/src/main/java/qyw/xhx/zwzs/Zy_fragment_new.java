@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import qyw.xhx.zwzs.utils.Constant;
+import qyw.xhx.zwzs.wh.Dkm1_view;
+
 public class Zy_fragment_new extends Fragment {
     private Context mContext;
     @Override
@@ -30,8 +34,14 @@ public class Zy_fragment_new extends Fragment {
         sweepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "nihao", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), "nihao", Toast.LENGTH_LONG).show();
 //从fragment跳转到activity中
+//                Intent intent = new Intent(Zy_fragment_new.this,CommonScanActivity.class);
+//                intent.putExtra(Constant.REQUEST_SCAN_MODE,Constant.REQUEST_SCAN_MODE_ALL_MODE);
+//                startActivity(intent);
+
+                Intent intent =new Intent("qyw.xhx.zwzs.ACTION_SAOMIAO");
+                startActivity(intent);
 //                startActivity(new Intent(getActivity(), PayMoneyActivity.class));
             }
         });

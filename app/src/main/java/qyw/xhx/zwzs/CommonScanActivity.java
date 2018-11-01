@@ -35,6 +35,7 @@ import com.google.zxing.Result;
 import qyw.xhx.zwzs.utils.Constant;
 import qyw.xhx.zwzs.wh.Dkm1_view;
 import qyw.xhx.zwzs.wh.Dkm_view;
+import qyw.xhx.zwzs.wh.Saomiao_view;
 import qyw.xhx.zwzs.zxing.ScanListener;
 import qyw.xhx.zwzs.zxing.ScanManager;
 import qyw.xhx.zwzs.zxing.decode.DecodeThread;
@@ -162,7 +163,7 @@ public final class CommonScanActivity extends Activity implements ScanListener, 
         tv_scan_result.setText("结果："+rawResult.getText());
         //跳转查询
         //跳转Zone_view.class
-        Intent intent = new Intent(CommonScanActivity.this,Dkm1_view.class);
+        Intent intent = new Intent(CommonScanActivity.this, Saomiao_view.class);
         intent.putExtra("pwd",rawResult.getText());
         startActivity(intent);
 

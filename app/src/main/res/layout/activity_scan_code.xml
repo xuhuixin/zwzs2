@@ -41,7 +41,7 @@
                 android:layout_centerVertical="true"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:text="二维码扫描"
+                android:text="光网终端条形码扫描"
                 android:textSize="18sp" />
         </RelativeLayout>
         <TextView

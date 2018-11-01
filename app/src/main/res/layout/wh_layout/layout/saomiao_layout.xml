@@ -15,7 +15,7 @@
             android:layout_centerInParent="true"
             android:textColor="#fff"
             android:textSize="@dimen/dp_20"
-            android:text="端口满查询"/>
+            android:text="光网终端扫码查询"/>
 
         <Button
             android:id="@+id/back_button"

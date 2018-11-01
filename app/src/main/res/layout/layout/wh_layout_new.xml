@@ -55,6 +55,7 @@
         >
     </View>
     <Button
+        android:id="@+id/feibiao"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
         android:background="@color/white"
@@ -62,7 +63,7 @@
         android:paddingLeft="@dimen/dp_10"
         android:gravity="center_vertical"
         android:drawablePadding="10dip"
-        android:textColor="@color/tv_gray_normal"
+        android:textColor="@color/black"
         android:text="非标小区PON口覆盖范围查询（开发中）"
         android:nextFocusLeft="@dimen/dp_10"
         />

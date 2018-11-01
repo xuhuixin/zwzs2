@@ -5,13 +5,15 @@ public class Olt {
     private String EQUIP_ROOM;
     private String DEV_IPADDR;
     private String VENDOR;
+    private String OLT_ID;
 
     public Olt(){}
-    public Olt(String USER_LABEL, String EQUIP_ROOM, String DEV_IPADDR, String VENDOR){
+    public Olt(String USER_LABEL, String EQUIP_ROOM, String DEV_IPADDR, String VENDOR,String OLT_ID){
         this.USER_LABEL=USER_LABEL;
         this.EQUIP_ROOM=EQUIP_ROOM;
         this.DEV_IPADDR=DEV_IPADDR;
         this.VENDOR=VENDOR;
+        this.OLT_ID=OLT_ID;
 
     }
 
@@ -39,6 +41,11 @@ public class Olt {
     public void setVENDOR(String VENDOR){
         this.VENDOR=VENDOR;
     }
-
+    public String getOLT_ID() {
+        return OLT_ID;
+    }
+    public void setOLT_ID(String OLT_ID){
+        this.OLT_ID=OLT_ID;
+    }
 
 }

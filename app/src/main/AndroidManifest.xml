@@ -54,6 +54,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".wh.Feibiao_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_FEIBIAO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".wh.Dkm_view"
             android:theme="@style/AppTheme">
 

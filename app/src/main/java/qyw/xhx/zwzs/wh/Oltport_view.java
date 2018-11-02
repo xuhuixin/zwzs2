@@ -39,23 +39,22 @@ import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
+import qyw.xhx.zwzs.util.MyKey;
 import qyw.xhx.zwzs.util.MessageTransmit;
 
-public class Feibiao_view extends AppCompatActivity {
+public class Oltport_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ListView listView;
-    private Button oltbutton;
     private Button backbtn;
-    private TextView ponchaxun;
     private TextView title;
-    private List<Olt> mDatas;
-    private OltAdapter oltAdapter;
-    private EditText olteditText;
+    private TextView oltmc;
+    private List<Oltport> mDatas;
+    private OltportAdapter oltportAdapter;
     private Handler handler=null;
 
-    private String olt_ip;
+    private String ponkou;
     private String olt_cj;
-    private String olt_mc;
+    private String olt_name;
     private String olt_id;
     private String message;
     private String number;
@@ -63,113 +62,80 @@ public class Feibiao_view extends AppCompatActivity {
     private String city_id;
     private String server_url;
 
-    private Socket mSocket;
+
     private BufferedReader mReader = null;
     private OutputStream mWriter = null;
     private MessageTransmit mTransmit;
     private MyApplication myApplication;//初始化全局变量
-    private static final String SOCKET_IP = "122.80.61.118";
-    private static final int SOCKET_PORT = 9051;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pon_layout);
+        setContentView(R.layout.oltport_layout);
+        //接收传值
+        Intent intent =getIntent();
+        olt_id=intent.getStringExtra("olt_id");
+        olt_name=intent.getStringExtra("olt_mc");
+        Log.d("接收到的olt_id",olt_id);
         myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
         number=myApplication.getNumber();
         city=myApplication.getCity();
         city_id=myApplication.getCity_id();
         server_url=myApplication.getServer_url();
-        Log.i("非标查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
-        Log.i("非标查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+        //获取上页传来的值
 
         //创建属于主线程的handler
-        handler=new Handler();
+//        handler=new Handler();
         initView();
-        title.setText("非标小区OLT查询");
+        oltmc.setText(olt_name);
+        initData();
+//        title.setText("非标小区OLT查询");
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        oltbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String id =olteditText.getText().toString();
-                    if (id.equals("")){
-                        Toast.makeText(Feibiao_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
-                    }else{
-                        initData(id);
-                        ponchaxun.setVisibility(View.GONE);
-                        listView.setVisibility(View.VISIBLE);
-                        Toast.makeText(Feibiao_view.this, "有输入", Toast.LENGTH_SHORT).show();
-                    }
-            }
-        });
-
-
     }
     //方法：初始化View
     private void initView() {
-        listView = (ListView) findViewById(R.id.list_view);
-        oltbutton=(Button) findViewById(R.id.olt_search);
-        olteditText=(EditText) findViewById(R.id.olt);
-        ponchaxun=(TextView) findViewById(R.id.pon_chaxun);
-        ponchaxun.setMovementMethod(ScrollingMovementMethod.getInstance());
+        listView = (ListView) findViewById(R.id.oltport_list_view);
         backbtn=(Button) findViewById(R.id.back_button);
         title=(TextView) findViewById(R.id.title_text);
-
+        oltmc=(TextView) findViewById(R.id.olt_mc);
     }
     //方法；初始化Data
-    private void initData(String id) {
-        mDatas = new ArrayList<Olt>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        String t=format.format(new Date());
-        String key=Md5Utils.md5("khsl"+t);
-        Log.d("key",key);
-
-        queryFromServer(server_url+"?type=sheng_olt&key="+key+"&id="+olteditText.getText().toString()+"&city_id="+city_id , "county");
-
+    private void initData() {
+        mDatas = new ArrayList<Oltport>();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+//        String t=format.format(new Date());
+//        String key=Md5Utils.md5("khsl"+t);
+        Log.d("MYKEY",MyKey.key());
+        queryFromServer(server_url+"?type=sheng_oltport&key="+MyKey.key()+"&id="+olt_id+"&city_id="+city_id , "county");
         //为数据绑定适配器
-        oltAdapter = new OltAdapter(this, mDatas);
-        listView.setAdapter(oltAdapter);
+        oltportAdapter = new OltportAdapter(this, mDatas);
+        listView.setAdapter(oltportAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Olt olt =mDatas.get(position);
-                olt_mc=olt.getUSER_LABEL();
-                olt_ip=olt.getDEV_IPADDR();
-                olt_cj=olt.getVENDOR();
-                olt_id=olt.getOLT_ID();
-                Toast.makeText(Feibiao_view.this,olt.getOLT_ID(),Toast.LENGTH_SHORT).show();
-                //跳转Oltport_view.class
-                Intent intent = new Intent(Feibiao_view.this,Oltport_view.class);
-                intent.putExtra("olt_id",olt_id);
-                intent.putExtra("olt_mc",olt_mc);
+                Oltport oltport =mDatas.get(position);
+                ponkou=oltport.getINT_ID();
+                Toast.makeText(Oltport_view.this,oltport.getINT_ID(),Toast.LENGTH_SHORT).show();
+                //跳转Fenguangqi_view.class
+                Intent intent = new Intent(Oltport_view.this,Fenguangqi_view.class);
+
+                //下一页上面显示OLT名称、pon口名称，同时传入pon_id
+                intent.putExtra("olt_name",olt_name);
+                intent.putExtra("pon_name",oltport.getUSER_LABEL());
+                intent.putExtra("ponkou_id",ponkou);
                 startActivity(intent);
-                //需要查询等待showProgressDialog
-//                将listview显示出来，同时listview 设为gone
-//                ..............
-//                ponchaxun.setVisibility(View.VISIBLE);
-//                ponchaxun.setText("正在查询，请稍后....");
-//                listView.setVisibility(View.INVISIBLE);
-////                需要在线程中
-//                Thread loginRunnable = new Thread() {
-//                    @Override
-//                    public void run() {
-//                        super.run();
-//                        initSocket(olt_ip,olt_cj);
-//                    }
-//                };
-//                loginRunnable.start();
-//                Toast.makeText(Feibiao_view.this,olt.getDEV_IPADDR(),Toast.LENGTH_SHORT).show();
-//                ...................
+
             }
         });
 
     }
+
+
 
     //根据传入的地址从服务器查询数据
     private void queryFromServer(String address, final String type) {
@@ -178,9 +144,10 @@ public class Feibiao_view extends AppCompatActivity {
              @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
+                 Log.d("服务器返回",responseText);
                 boolean result = false;
                 if ("".equals(responseText)){
-                    Toast.makeText(Feibiao_view.this, "未查询到数据", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Oltport_view.this, "未查询到数据", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if ("county".equals(type)) {
@@ -192,7 +159,7 @@ public class Feibiao_view extends AppCompatActivity {
                 }
                  if (result) {
                      Log.d("bbbbbb", "判断是否下载完毕");
-                     Feibiao_view.this.runOnUiThread(new Runnable() {
+                     Oltport_view.this.runOnUiThread(new Runnable() {
                          @Override
                          public void run() {
                              closeProgressDialog();
@@ -205,11 +172,11 @@ public class Feibiao_view extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 Log.d("SHIBAI","网络加载失败");
                 // 通过runOnUiThread()方法回到主线程处理逻辑
-                Feibiao_view.this.runOnUiThread(new Runnable() {
+                Oltport_view.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         closeProgressDialog();
-                        Toast.makeText(Feibiao_view.this, "加载失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Oltport_view.this, "加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -218,17 +185,18 @@ public class Feibiao_view extends AppCompatActivity {
     private void parseJSONWithGSON(String jsonData) {
         Gson gson = new Gson();
         /**County类一定注意大写，因为传过来的是大写**/
-        List<Olt> leibiao=gson.fromJson(jsonData,new TypeToken<List<Olt>>(){}.getType());
+        List<Oltport> leibiao=gson.fromJson(jsonData,new TypeToken<List<Oltport>>(){}.getType());
         mDatas.clear();
-        for (Olt olt:leibiao){
+        for (Oltport oltport:leibiao){
 //            Log.d("MainActivity", "COUNTY_ID is " + county.getCOUNTY_ID());
-            olt = new Olt(olt.getUSER_LABEL(),olt.getEQUIP_ROOM(),olt.getDEV_IPADDR(),olt.getVENDOR(),olt.getOLT_ID());
-            mDatas.add(olt);
+            oltport = new Oltport(oltport.getUSER_LABEL(),oltport.getINT_ID(),oltport.getRATE(),oltport.getNENAME(),
+                    oltport.getPORT_TYPE(),oltport.getFGQSL());
+            mDatas.add(oltport);
         }
-        Feibiao_view.this.runOnUiThread(new Runnable() {
+        Oltport_view.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                oltAdapter.notifyDataSetChanged();
+                oltportAdapter.notifyDataSetChanged();
             }
         });
 
@@ -238,7 +206,7 @@ public class Feibiao_view extends AppCompatActivity {
      */
     private void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(Feibiao_view.this);
+            progressDialog = new ProgressDialog(Oltport_view.this);
             progressDialog.setMessage("正在加载...");
             progressDialog.setCanceledOnTouchOutside(false);
         }

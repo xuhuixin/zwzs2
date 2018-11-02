@@ -64,7 +64,15 @@
 
         <activity android:name=".wh.Dkm_view"
             android:theme="@style/AppTheme">
-
+        </activity>
+        <activity android:name=".wh.Oltport_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.Fenguangqi_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.House_view"
+            android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".wh.Dkm1_view"
             android:theme="@style/AppTheme">

@@ -107,6 +107,7 @@ public class Dkm_new_view extends AppCompatActivity {
                 //跳转Dkm_view.class
                 Intent intent = new Intent(Dkm_new_view.this,Dkm_view.class);
                 intent.putExtra("flow_id",dkm_new.getFLOWID());
+                intent.putExtra("title","端口满查询");
                 startActivity(intent);
                 Toast.makeText(Dkm_new_view.this,dkm_new.getFLOWID(),Toast.LENGTH_SHORT).show();
             }
@@ -121,13 +122,22 @@ public class Dkm_new_view extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 boolean result = false;
-                if (!"".equals(responseText)) {
-//                    if ("county".equals(type)) {
-                    Log.d("aaaaaaa",responseText);
-                    /**使用gson解析**/
-                    parseJSONWithGSON(responseText);
-                    result =true;
-                }
+                 if (!"".equals(responseText)) {
+                     if ("[]".equals(responseText)){
+                         Dkm_new_view.this.runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 closeProgressDialog();
+                                 Toast.makeText(Dkm_new_view.this, "没有数据返回", Toast.LENGTH_SHORT).show();
+                             }
+                         });
+                     }else{
+                         Log.d("aaaaaaa",responseText);
+                         /**使用gson解析**/
+                         parseJSONWithGSON(responseText);
+                         result =true;
+                     }
+                 }
                 if (result) {
                     Log.d("bbbbbb","判断是否下载完毕");
                     Dkm_new_view.this.runOnUiThread(new Runnable() {

@@ -1,6 +1,7 @@
 package androidkun.com.versionupdatelibrary.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -13,7 +14,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -46,6 +49,11 @@ import androidkun.com.versionupdatelibrary.entity.FileBean;
 public class VersionUpdateService extends Service {
     public static final String ACTION_START = "ACTION_START";
     public static final String ACTION_PAUSE = "ACTION_PAUSE";
+
+    private static final int NOTIFICATION_ID = 0x002;
+    private static final String channelID = "myzwzs";
+    private static final String channelName = "zwzs";
+
     /**
      * 下载任务集合
      */
@@ -154,7 +162,8 @@ public class VersionUpdateService extends Service {
         PendingIntent closeIntent = PendingIntent.getBroadcast(this, 1, closeAction, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteView.setOnClickPendingIntent(R.id.btnClose, closeIntent);
 
-        builder = new NotificationCompat.Builder(this);
+
+        builder = new NotificationCompat.Builder(this,channelID);
         if(Config.notificaionSmallIconResId == 0) {
             builder.setSmallIcon(R.mipmap.ic_launcher);
         }else{
@@ -166,6 +175,12 @@ public class VersionUpdateService extends Service {
         builder.setOngoing(true);
         builder.setPriority(Notification.PRIORITY_MAX);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        适配安卓8.0的消息渠道
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelID, channelName,NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+
         notificationManager.notify(notificationId, builder.build());
     }
 
@@ -323,6 +338,15 @@ public class VersionUpdateService extends Service {
             install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri contentUri = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", file);
             install.setDataAndType(contentUri, "application/vnd.android.package-archive");
+            //兼容8.0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                boolean hasInstallPermission = this.getPackageManager().canRequestPackageInstalls();
+                if (!hasInstallPermission) {
+//                    ToastUtil.makeText(MyApplication.getContext(), MyApplication.getContext().getString(R.string.string_install_unknow_apk_note), false);
+                    startInstallPermissionSettingActivity();
+                    return;
+                }
+            }
         } else {
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             install.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
@@ -330,7 +354,16 @@ public class VersionUpdateService extends Service {
         getApplicationContext().startActivity(install);
         collapseStatusBar();
     }
-
+    /**
+     * 跳转到设置-允许安装未知来源-页面
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startInstallPermissionSettingActivity() {
+        //注意这个是8.0新API
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+    }
     /**
      * 收起通知栏
      */

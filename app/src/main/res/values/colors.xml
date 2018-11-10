@@ -75,8 +75,17 @@
     <color name="grey">#607D8B</color>
     <color name="orange">#F57C00</color>
 
-
     <!--searchView-->
     <color name="search_layover_bg">#50000000</color>
     <color name="theme_primary">#2196F3</color>
+
+    <color name="line_gray">#dcdcdc</color>
+    <color name="line_gray_light">#f1f1f1</color>
+    <color name="gray_page_bg">#ecedf1</color>
+    <color name="gray_text">#5b5b5b</color>
+    <color name="gray_text_dark">#292929</color>
+    <color name="gray_text_light">#979797</color>
+    <color name="window_half_transparent">#90000000</color>
+    <color name="blue_white">#0eabe5</color>
+
 </resources>

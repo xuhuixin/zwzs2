@@ -47,7 +47,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -239,7 +239,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -277,7 +277,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="@dimen/dp_40">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -315,7 +315,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50">
+        android:layout_height="wrap_content">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -351,5 +351,94 @@
         android:layout_height="1px"
         android:background="@color/black">
     </View>
+
+    <RadioGroup
+        android:id="@+id/dyj"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="请选择打印厂家"/>
+        <RadioButton
+            android:id="@+id/btn1"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/radiobutton_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="品胜"
+            android:textColor="@drawable/radiobutton_textcolor"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/btn2"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobutton_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="P0502"
+            android:textColor="@drawable/radiobutton_textcolor"
+            android:textSize="14sp" />
+    </RadioGroup>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black">
+    </View>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="打印类型"/>
+        <RadioButton
+            android:id="@+id/btnlx1"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/radiobutton_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="打印分光器侧标签"
+            android:textColor="@drawable/radiobutton_textcolor"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/btnlx2"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobutton_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="打印用户侧标签"
+            android:textColor="@drawable/radiobutton_textcolor"
+            android:textSize="14sp" />
+    </RadioGroup>
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffff"
+        android:src="@drawable/ic_launcher"
+        android:visibility="invisible"/>
 </LinearLayout>
 

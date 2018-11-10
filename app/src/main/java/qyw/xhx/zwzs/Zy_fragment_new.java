@@ -34,15 +34,16 @@ public class Zy_fragment_new extends Fragment {
         sweepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getActivity(), "nihao", Toast.LENGTH_LONG).show();
-//从fragment跳转到activity中
-//                Intent intent = new Intent(Zy_fragment_new.this,CommonScanActivity.class);
-//                intent.putExtra(Constant.REQUEST_SCAN_MODE,Constant.REQUEST_SCAN_MODE_ALL_MODE);
-//                startActivity(intent);
-
                 Intent intent =new Intent("qyw.xhx.zwzs.ACTION_SAOMIAO");
                 startActivity(intent);
-//                startActivity(new Intent(getActivity(), PayMoneyActivity.class));
+            }
+        });
+        Button ponButton = (Button) getActivity().findViewById(R.id.ont_offline);
+        ponButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent("qyw.xhx.zwzs.ACTION_ONTOFFLINE");
+                startActivity(intent);
             }
         });
 

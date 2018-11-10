@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="qyw.xhx.zwzs">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- 二维码相关权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,6 +18,10 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -31,7 +36,6 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,6 +58,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".zy.Olt_Ont_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_ONTOFFLINE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".wh.Feibiao_view"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -61,11 +72,23 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
+        <activity android:name=".wh.Jqm_new_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_JQM"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".wh.Dkm_view"
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".wh.Oltport_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".zy.Ont_Oltport_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".zy.Ont_Down_view"
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".wh.Fenguangqi_view"

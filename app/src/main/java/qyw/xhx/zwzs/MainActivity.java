@@ -178,6 +178,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
         adDialog.setCanceledOnTouchOutside(false);
         //按返回键能不能退出
         adDialog.setCancelable(false);
+        //登陆按钮不可点击，只能升级完才能
+        setLoginBtnClickable(false);
+
         adDialog.show();
     }
 
@@ -351,7 +354,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
             return;
         }
     //登录一般都是请求服务器来判断密码是否正确，要请求网络，要子线程
-//        showLoading();//显示加载框
+        showLoading();//显示加载框
         Thread loginRunnable = new Thread() {
             @Override
             public void run() {
@@ -458,7 +461,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Compo
      */
     public void showLoading() {
         if (mLoadingDialog == null) {
-            mLoadingDialog = new LoadingDialog(this, getString(R.string.loading), false);
+            mLoadingDialog = new LoadingDialog(this, "正在登陆...", false);
         }
         mLoadingDialog.show();
     }

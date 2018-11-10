@@ -45,6 +45,15 @@ public class Wh_fragment_new extends Fragment {
 //                startActivity(new Intent(getActivity(), PayMoneyActivity.class));
             }
         });
+        Button jqm_chaxun = (Button) getActivity().findViewById(R.id.jqm);
+        jqm_chaxun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent("qyw.xhx.zwzs.ACTION_JQM");
+                startActivity(intent);
+//                startActivity(new Intent(getActivity(), PayMoneyActivity.class));
+            }
+        });
     }
 
 

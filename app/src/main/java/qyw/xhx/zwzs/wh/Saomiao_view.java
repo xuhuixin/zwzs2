@@ -2,6 +2,7 @@ package qyw.xhx.zwzs.wh;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +30,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import Jack.WewinPrinterHelper.AsyncProgress;
+import Jack.WewinPrinterHelper.Print;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import qyw.xhx.zwzs.MyBaseAdapter;
 import qyw.xhx.zwzs.R;
+import qyw.xhx.zwzs.lanya;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
 
@@ -56,15 +62,24 @@ public class Saomiao_view extends AppCompatActivity {
     private String id;
     private ArrayList dkmArrayList;
     private HashMap dkmMap;
-
+    private Print p = null;
+    private String xml = "";
+    private String xmlStr1;
+    private ImageView imageView1;
+    public boolean flag = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.saomiao_layout);
-        //接收传值,接收鉴权码
+        p = new Print(Saomiao_view.this);
+////        接收传值,接收鉴权码
         Intent intent =getIntent();
         id=intent.getStringExtra("pwd");
         Toast.makeText(Saomiao_view.this, id, Toast.LENGTH_SHORT).show();
+//        id="JN03751124";
+//        id="1445908385969225";
+
+
 //        id="JN03751124";
         //创建属于主线程的handler
         handler=new Handler();
@@ -102,12 +117,11 @@ public class Saomiao_view extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         key=Md5Utils.md5("khsl"+format.format(new Date()));
 //        pwd=dkmeditText.getText().toString();
-        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&id="+id+"&key="+key;
+//        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&id="+id+"&key="+key;
+        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&city_id=531&id="+id+"&key="+key;
+        Log.d("dizhi",url);
         queryFromServer(url,"county");
     }
-
-
-
     class DkmAdapter extends MyBaseAdapter<ArrayList> {
         private Context context;
         DkmAdapter(Context c,ArrayList arrayList){
@@ -134,8 +148,20 @@ public class Saomiao_view extends AppCompatActivity {
                 viewHolder.ahthor_value =(TextView) convertView.findViewById(R.id.ahthor_value);
                 viewHolder.grid_name =(TextView) convertView.findViewById(R.id.grid_name);
                 viewHolder.full_addr =(TextView) convertView.findViewById(R.id.full_addr);
+                viewHolder.btn1 =(RadioButton) convertView.findViewById(R.id.btn1);
+                viewHolder.btn2 =(RadioButton) convertView.findViewById(R.id.btn2);
+                viewHolder.btnlx1 =(RadioButton) convertView.findViewById(R.id.btnlx1);
+                viewHolder.btnlx2 =(RadioButton) convertView.findViewById(R.id.btnlx2);
+                viewHolder.imageView1 =(ImageView) convertView.findViewById(R.id.imageView1);
                 convertView.setTag(viewHolder);
                 viewHolder.fgqid.setTag(position);
+                viewHolder.btn1.setTag(position);
+                viewHolder.btn2.setTag(position);
+                viewHolder.btnlx1.setTag(position);
+                viewHolder.btnlx2.setTag(position);
+
+
+
             }else {
                 viewHolder =(ViewHolder)convertView.getTag();
             }
@@ -162,6 +188,122 @@ public class Saomiao_view extends AppCompatActivity {
 //                    Toast.makeText(Dkm_view.this,"正在查询，请稍后...",Toast.LENGTH_SHORT).show();
                 }
             });
+            viewHolder.btn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int downLoadPosition =(Integer)v.getTag();
+                    String house_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("house_id");
+
+                     //跳转Zone_view.class
+                    Toast.makeText(Saomiao_view.this,"已选择了品胜",Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.btn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int downLoadPosition =(Integer)v.getTag();
+                    String hold_pos_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("hold_pos_id");
+//                    打印一下
+                    Log.d("点击了",hold_pos_id);
+                    //跳转Zone_view.class
+                    Toast.makeText(Saomiao_view.this,"该厂家打印功能还在开发中...",Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.btnlx1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int downLoadPosition =(Integer)v.getTag();
+                    String house_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("house_id");
+                    String full_addr =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("full_addr");
+                    xmlStr1 = "<Data><Print><row><type>02F</type><code>"+house_id+"</code><text>"+full_addr+"</text></row></Print></Data>";
+                    String hold_pos_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("hold_pos_id");
+//                    打印一下
+//                    Log.d("dayin",full_addr);
+//                    Log.d("dayin1",house_id);
+                    xml = xmlStr1;
+
+//                    imageView1
+//                            .setImageBitmap(p.getBitmapForPreview(xml, Saomiao_view.this));
+                    // key code
+                    AsyncProgress.indeterminate(Saomiao_view.this, handler, "正在打印中，请稍候...",
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        while (flag) {
+                                            String result = p.LabelPrint(xml,
+                                                    Saomiao_view.this);
+                                            Toast.makeText(Saomiao_view.this,"正在打印分光器侧标签...",
+                                                    Toast.LENGTH_SHORT).show();
+                                            flag = false;
+                                        }
+                                    } catch (Exception e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    flag = true;
+                                }
+                            });
+
+//                    Log.d("点击了",hold_pos_id);
+                    //跳转Zone_view.class
+
+                }
+            });
+            viewHolder.btnlx2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int downLoadPosition =(Integer)v.getTag();
+                    String hold_pos_id =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("hold_pos_id");
+                    String cover_device =(String)((HashMap)dkmArrayList.get(downLoadPosition)).get("cover_device");
+                    xmlStr1 = "<Data><Print><row><type>02F</type><code>"+hold_pos_id+"</code><text>"+cover_device+"</text></row></Print></Data>";
+
+//                    打印一下
+                    xml = xmlStr1;
+//                    imageView1
+//                            .setImageBitmap(p.getBitmapForPreview(xml, Saomiao_view.this));
+                    // key code
+                    AsyncProgress.indeterminate(Saomiao_view.this, handler, "正在打印中，请稍候...",
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        while (flag) {
+                                            String result = p.LabelPrint(xml,
+                                                    Saomiao_view.this);
+                                            Toast.makeText(Saomiao_view.this,"正在打印用户侧标签...",
+                                                    Toast.LENGTH_SHORT).show();
+                                            flag = false;
+                                        }
+                                    } catch (Exception e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    flag = true;
+                                }
+                            });
+                }
+            });
+//            RadioGroup radioGroup = (RadioGroup) findViewById(R.id.dyj);
+//            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                    RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+//                    String result = radioButton.getText().toString();
+//                    Log.d("dyj",result);
+//                }
+//            });
+
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -184,6 +326,12 @@ public class Saomiao_view extends AppCompatActivity {
         TextView ahthor_value;
         TextView grid_name;
         TextView full_addr;
+        ImageView imageView1;
+        RadioButton btn1;
+        RadioButton btn2;
+        RadioButton btnlx1;
+        RadioButton btnlx2;
+
 
     }
     //根据传入的地址从服务器查询数据
@@ -193,6 +341,7 @@ public class Saomiao_view extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
+                Log.d("fanhui",responseText);
                 boolean result = false;
                 if ("[]".equals(responseText)){
                     Saomiao_view.this.runOnUiThread(new Runnable() {
@@ -256,6 +405,7 @@ public class Saomiao_view extends AppCompatActivity {
             dkmMap.put("grid_name",dkm.getGRID_NAME());
             dkmMap.put("cover_type",dkm.getCOVER_TYPE());
             dkmMap.put("hold_pos_id",dkm.getHOLD_POS_ID());
+            dkmMap.put("house_id",dkm.getHOUSE_ID());
             dkmArrayList.add(dkmMap);
 //            dkm = new Dkm(dkm.getZH_LABEL(),dkm.getFULL_ADDR(),dkm.getFLOWID(),
 //                    dkm.getCOVER_DEVICE(),dkm.getCOVER_PORT(),dkm.getGRID_NAME(),
@@ -291,4 +441,11 @@ public class Saomiao_view extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+    @Override
+    protected void onPause() {
+        p.bluetoothClose();
+        super.onPause();
+    }
+
+
 }

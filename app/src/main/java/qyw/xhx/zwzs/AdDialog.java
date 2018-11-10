@@ -74,7 +74,7 @@ public class AdDialog extends BaseDialog<AdDialog> {
         sjbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"shengji",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"正在进行版本升级，下载进度请查看通知栏。",Toast.LENGTH_SHORT).show();
                 VersionUpdateConfig.getInstance()//获取配置实例
                         .setContext(AdDialog.this.context)//设置上下文
                         .setDownLoadURL(bburl)//设置文件下载链接
@@ -83,8 +83,6 @@ public class AdDialog extends BaseDialog<AdDialog> {
                         .setNotificationSmallIconRes(R.mipmap.app_icon_small)//设置通知小图标
                         .setNotificationTitle("装维助手版本升级")//设置通知标题
                         .startDownLoad();//开始下载
-
-
                 //处理完逻辑关闭弹框的代码
                 dismiss();
             }

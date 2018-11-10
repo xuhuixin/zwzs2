@@ -4,10 +4,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "qyw.xhx.zwzs"
-        minSdkVersion 16
+        minSdkVersion 20
         targetSdkVersion 27
-        versionCode 15
-        versionName "1.0.5"
+        versionCode 21
+        versionName "1.0.21"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
@@ -50,4 +50,7 @@ dependencies {
     // (必选)
     implementation files('libs/butterknife-7.0.1.jar')
     implementation files('libs/zxing.jar')
+//    implementation files('libs/core-2.2.jar')
+    implementation files('libs/Wewin_ShanDong_TT_TD20181102.jar')
+    implementation files('libs/wewinPrinter2018_api.jar')
 }

@@ -123,6 +123,7 @@ public class Ont_Oltport_view extends AppCompatActivity {
                 intent.putExtra("pon_name",oltport.getUSER_LABEL());//需要
 //                intent.putExtra("DEV_IPADDR",oltport.getUSER_LABEL());//需要
                 intent.putExtra("ponkou_id",ponkou);
+                intent.putExtra("olt_ip",olt_ip);
                 startActivity(intent);
 
             }

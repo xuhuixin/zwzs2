@@ -44,10 +44,12 @@
             android:layout_height="wrap_content"
             android:text="上页传来的OLT及PON口"/>
         <Button
+            android:id="@+id/again"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="拔纤后再次核对"
             android:gravity="right"
+            android:visibility="invisible"
             />
     </LinearLayout>
 
@@ -65,7 +67,7 @@
             android:id="@+id/zh_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
+            android:layout_weight="6"
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:text="分光器名称"/>
@@ -73,7 +75,7 @@
             android:id="@+id/ahthor_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="6"
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:text="鉴权码"/>
@@ -81,7 +83,7 @@
             android:id="@+id/band_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:text="宽带账号"/>
@@ -89,7 +91,7 @@
             android:id="@+id/state"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:text="是否在线"/>

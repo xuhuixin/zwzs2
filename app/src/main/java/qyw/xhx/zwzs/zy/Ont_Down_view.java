@@ -16,17 +16,25 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.MainActivity;
+import qyw.xhx.zwzs.Main_view;
 import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.R;
+import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.MessageTransmit;
 import qyw.xhx.zwzs.util.MyKey;
@@ -38,10 +46,11 @@ public class Ont_Down_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ListView listView;
     private Button backbtn;
+    private Button againbtn;
     private TextView title;
     private TextView oltmc;
-    private List<Fenguangqi> mDatas;
-    private FenguangqiAdapter fenguangqiAdapter;
+    private List<Ont_Down> mDatas;
+    private Ont_Down_Adapter ont_down_adapter;
     private Handler handler=null;
 
     private String ponkou;
@@ -49,17 +58,22 @@ public class Ont_Down_view extends AppCompatActivity {
     private String olt_name;
     private String pon_name;
     private String ponkou_id;
+    private String olt_ip;
     private String message;
     private String number;
+    private String sjm;
     private String city;
     private String city_id;
     private String server_url;
 
-
+    private Socket mSocket;
     private BufferedReader mReader = null;
     private OutputStream mWriter = null;
     private MessageTransmit mTransmit;
     private MyApplication myApplication;//初始化全局变量
+
+    private static final String SOCKET_IP = "122.80.61.118";
+    private static final int SOCKET_PORT = 9061;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +85,10 @@ public class Ont_Down_view extends AppCompatActivity {
         pon_name=intent.getStringExtra("pon_name");
         olt_name=intent.getStringExtra("olt_name");
         ponkou_id=intent.getStringExtra("ponkou_id");
+        olt_ip=intent.getStringExtra("olt_ip");
         Log.d("接收到的ponkou_id",ponkou_id);
+        Log.d("接收到的pon_name",pon_name);
+        Log.d("接收到的olt_ip",olt_ip);
         myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
         number=myApplication.getNumber();
         city=myApplication.getCity();
@@ -90,54 +107,170 @@ public class Ont_Down_view extends AppCompatActivity {
                 finish();
             }
         });
-    }
-    //方法：初始化View
-    private void initView() {
-        listView = (ListView) findViewById(R.id.fenguangqi_list_view);
-        backbtn=(Button) findViewById(R.id.back_button);
-        title=(TextView) findViewById(R.id.title_text);
-        oltmc=(TextView) findViewById(R.id.olt_mc);
-    }
-    //方法；初始化Data
-    private void initData() {
-        mDatas = new ArrayList<Fenguangqi>();
-//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-//        String t=format.format(new Date());
-//        String key=Md5Utils.md5("khsl"+t);
-        //先往socket服务器发送查询PON口在线状态
 
-        //
-        Log.d("MYKEY",MyKey.key());
-        queryFromServer(server_url+"?type=sheng_cover_pos&key="+MyKey.key()+"&id="+ponkou_id+"&city_id="+city_id , "county");
-        //为数据绑定适配器
-        fenguangqiAdapter = new FenguangqiAdapter(this, mDatas);
-        listView.setAdapter(fenguangqiAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        againbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fenguangqi fenguangqi =mDatas.get(position);
-//                ponkou=oltport.getUSER_LABEL();
-                Toast.makeText(Ont_Down_view.this,fenguangqi.getINT_ID(),Toast.LENGTH_SHORT).show();
-                //跳转House_view.class
-                Intent intent = new Intent(Ont_Down_view.this,House_view.class);
+            public void onClick(View v) {
+                //
+                Log.d("zaicichaxun","再次查询");
+                initDataAgain();
 
-                //下一页上面显示OLT名称、pon口名称，同时传入pon_id
-                intent.putExtra("olt_name",olt_name);
-                intent.putExtra("pon_name",pon_name);
-                intent.putExtra("fenguangqi_name",fenguangqi.getZH_LABEL());
-                intent.putExtra("fenguangqi_id",fenguangqi.getINT_ID());
-                startActivity(intent);
 
             }
         });
 
     }
+    //方法：初始化View
+    private void initView() {
+        listView = (ListView) findViewById(R.id.fenguangqi_list_view);
+        backbtn=(Button) findViewById(R.id.back_button);
+        againbtn=(Button) findViewById(R.id.again);
+        title=(TextView) findViewById(R.id.title_text);
+        oltmc=(TextView) findViewById(R.id.olt_mc);
+    }
+    //方法；初始化Data
+    private void initData() {
+        mDatas = new ArrayList<Ont_Down>();
+        Thread loginRunnable = new Thread() {
+            @Override
+            public void run() {
+                initSocket(olt_ip, pon_name);
+            }
+        };
+        loginRunnable.start();
+        //
+        Log.d("MYKEY",MyKey.key());
 
+        //为数据绑定适配器
+        ont_down_adapter = new Ont_Down_Adapter(this, mDatas);
+        listView.setAdapter(ont_down_adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+        });
+
+    }
+    private void initDataAgain() {
+        mDatas.clear();
+        Thread loginRunnable = new Thread() {
+            @Override
+            public void run() {
+                initSocketAgain(olt_ip, pon_name);
+            }
+        };
+        loginRunnable.start();
+        //
+        Log.d("MYKEY",MyKey.key());
+
+        //为数据绑定适配器
+        ont_down_adapter = new Ont_Down_Adapter(this, mDatas);
+        listView.setAdapter(ont_down_adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+    }
+    private void initSocket(String ip,String pon) {
+        mSocket = new Socket();
+        String nowyear= DateUtil.getNowYear();
+        Log.d("yyyy",nowyear);
+        int ny;
+        ny = Integer.parseInt(nowyear);
+//        Log.d("username",us);
+//        Log.d("password",ps);
+
+        try {
+            mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
+            mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+            mWriter = mSocket.getOutputStream();
+            String content = mReader.readLine();
+            Log.d("连接获取加密",content);
+            JSONObject jsonObject = new JSONObject(content);
+            int key= jsonObject.getInt("key");
+//            Log.d("第一次",content);
+            if (content!=null){
+                //发送验证信息
+                int jiami=ny+key;
+                JSONObject fanhui = new JSONObject();
+                fanhui.put("askey", jiami);
+                fanhui.put("olt_ip", olt_ip);
+                fanhui.put("pon", pon_name);
+                fanhui.put("action", "pon_down");
+                fanhui.put("sjm", "first");
+                fanhui.put("zh", number);
+                mWriter.write(fanhui.toString(1).getBytes());
+                String content1 = mReader.readLine();
+                Log.d("第二次",content1);
+//                解析
+                JSONObject jsonObject_ok = new JSONObject(content1);
+                String content2= jsonObject_ok.getString("content");
+                String number= jsonObject_ok.getString("number");
+                if (content2.equals("scuess")){
+                    queryFromServer(server_url+"?type=531_hw_pon_down&key="+MyKey.key()+"&id="+number , "county");
+                    Log.d("数据获取网址:",server_url+"?type=531_hw_pon_down&key="+MyKey.key()+"&id="+number);
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void initSocketAgain(String ip,String pon) {
+        mSocket = new Socket();
+        String nowyear= DateUtil.getNowYear();
+        Log.d("yyyy",nowyear);
+        int ny;
+        ny = Integer.parseInt(nowyear);
+//        Log.d("username",us);
+//        Log.d("password",ps);
+
+        try {
+            mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
+            mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+            mWriter = mSocket.getOutputStream();
+            String content = mReader.readLine();
+            Log.d("连接获取加密",content);
+            JSONObject jsonObject = new JSONObject(content);
+            int key= jsonObject.getInt("key");
+//            Log.d("第一次",content);
+            if (content!=null){
+                //发送验证信息
+                int jiami=ny+key;
+                JSONObject fanhui = new JSONObject();
+                fanhui.put("askey", jiami);
+                fanhui.put("olt_ip", olt_ip);
+                fanhui.put("pon", pon_name);
+                fanhui.put("action", "pon_down");
+                fanhui.put("sjm", sjm);
+                fanhui.put("zh", number);
+                mWriter.write(fanhui.toString(1).getBytes());
+                String content1 = mReader.readLine();
+                Log.d("第二次",content1);
+//                解析
+                JSONObject jsonObject_ok = new JSONObject(content1);
+                String content2= jsonObject_ok.getString("content");
+                String number= jsonObject_ok.getString("number");
+                if (content2.equals("scuess")){
+                    queryFromServer(server_url+"?type=531_hw_pon_down1&key="+MyKey.key()+"&id="+number , "county");
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //根据传入的地址从服务器查询数据
     private void queryFromServer(String address, final String type) {
-        showProgressDialog();
+        showProgressDialog("正在获取数据");
         HttpUtil.sendOkHttpRequest(address, new Callback() {
              @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -160,7 +293,7 @@ public class Ont_Down_view extends AppCompatActivity {
                      Ont_Down_view.this.runOnUiThread(new Runnable() {
                          @Override
                          public void run() {
-                             closeProgressDialog();
+                             closeProgressDialog("获取完毕");
 //                            Adapter.notifyDataSetChanged();
                          }
                      });
@@ -173,7 +306,7 @@ public class Ont_Down_view extends AppCompatActivity {
                 Ont_Down_view.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeProgressDialog();
+                        closeProgressDialog("获取完毕");
                         Toast.makeText(Ont_Down_view.this, "加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -183,38 +316,49 @@ public class Ont_Down_view extends AppCompatActivity {
     private void parseJSONWithGSON(String jsonData) {
         Gson gson = new Gson();
         /**County类一定注意大写，因为传过来的是大写**/
-        List<Fenguangqi> leibiao=gson.fromJson(jsonData,new TypeToken<List<Fenguangqi>>(){}.getType());
+        List<Ont_Down> leibiao=gson.fromJson(jsonData,new TypeToken<List<Ont_Down>>(){}.getType());
         mDatas.clear();
-        for (Fenguangqi fenguangqi:leibiao){
+        for (Ont_Down ont_down:leibiao){
 //            Log.d("MainActivity", "COUNTY_ID is " + county.getCOUNTY_ID());
-            fenguangqi = new Fenguangqi(fenguangqi.getZH_LABEL(),fenguangqi.getINT_ID());
-            mDatas.add(fenguangqi);
+            ont_down = new Ont_Down(ont_down.getIP(),ont_down.getPON(),
+                    ont_down.getAHTHOR_VALUE(),ont_down.getBAND_ACCOUNT(),ont_down.getSTATE(),ont_down.getCOVER_DEVICE(),ont_down.getSJM());
+            sjm=ont_down.getSJM();
+            mDatas.add(ont_down);
         }
         Ont_Down_view.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                fenguangqiAdapter.notifyDataSetChanged();
+                ont_down_adapter.notifyDataSetChanged();
+                againbtn.setVisibility(View.VISIBLE);
             }
         });
 
     }
-    /**
-     * 显示进度对话框
-     */
-    private void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(Ont_Down_view.this);
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
+
+    public void showProgressDialog(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(progressDialog ==null)
+                {
+                    progressDialog = new ProgressDialog(Ont_Down_view.this);
+                    progressDialog.setMessage("正在加载...");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                }
+                progressDialog.show();
+            }
+        });
     }
-    /**
-     * 关闭进度对话框
-     */
-    private void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+
+    public void closeProgressDialog(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+            }
+        });
     }
+
 }

@@ -38,9 +38,12 @@ import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.MessageTransmit;
 import qyw.xhx.zwzs.util.MyKey;
+import qyw.xhx.zwzs.wh.Dkm_new;
+import qyw.xhx.zwzs.wh.Dkm_view;
 import qyw.xhx.zwzs.wh.Fenguangqi;
 import qyw.xhx.zwzs.wh.FenguangqiAdapter;
 import qyw.xhx.zwzs.wh.House_view;
+import qyw.xhx.zwzs.wh.Jqm_new_view;
 
 public class Ont_Down_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
@@ -114,8 +117,6 @@ public class Ont_Down_view extends AppCompatActivity {
                 //
                 Log.d("zaicichaxun","再次查询");
                 initDataAgain();
-
-
             }
         });
 
@@ -134,6 +135,7 @@ public class Ont_Down_view extends AppCompatActivity {
         Thread loginRunnable = new Thread() {
             @Override
             public void run() {
+                showProgressDialog("正在登陆设备查询，请稍后...");
                 initSocket(olt_ip, pon_name);
             }
         };
@@ -147,7 +149,13 @@ public class Ont_Down_view extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                //传值打印
+                Ont_Down ont_down =mDatas.get(position);
+                Log.d("dianji",ont_down.getFLOWID());
+                Intent intent = new Intent(Ont_Down_view.this,Dkm_view.class);
+                intent.putExtra("flow_id",ont_down.getFLOWID());
+                intent.putExtra("title","ONT下线查询");
+                startActivity(intent);
             }
         });
 
@@ -157,6 +165,7 @@ public class Ont_Down_view extends AppCompatActivity {
         Thread loginRunnable = new Thread() {
             @Override
             public void run() {
+                showProgressDialog("正在再次登陆设备查询...");
                 initSocketAgain(olt_ip, pon_name);
             }
         };
@@ -170,7 +179,13 @@ public class Ont_Down_view extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                //传值打印
+                Ont_Down ont_down =mDatas.get(position);
+                Log.d("dianji",ont_down.getFLOWID());
+                Intent intent = new Intent(Ont_Down_view.this,Dkm_view.class);
+                intent.putExtra("flow_id",ont_down.getFLOWID());
+                intent.putExtra("title","ONT下线查询");
+                startActivity(intent);
             }
         });
 
@@ -189,7 +204,7 @@ public class Ont_Down_view extends AppCompatActivity {
             mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
             mWriter = mSocket.getOutputStream();
             String content = mReader.readLine();
-            Log.d("连接获取加密",content);
+//            Log.d("连接获取加密",content);
             JSONObject jsonObject = new JSONObject(content);
             int key= jsonObject.getInt("key");
 //            Log.d("第一次",content);
@@ -211,6 +226,7 @@ public class Ont_Down_view extends AppCompatActivity {
                 String content2= jsonObject_ok.getString("content");
                 String number= jsonObject_ok.getString("number");
                 if (content2.equals("scuess")){
+                    closeProgressDialog("设备查询完毕，正在获取返回数据");
                     queryFromServer(server_url+"?type=531_hw_pon_down&key="+MyKey.key()+"&id="+number , "county");
                     Log.d("数据获取网址:",server_url+"?type=531_hw_pon_down&key="+MyKey.key()+"&id="+number);
                 }
@@ -257,8 +273,9 @@ public class Ont_Down_view extends AppCompatActivity {
                 String content2= jsonObject_ok.getString("content");
                 String number= jsonObject_ok.getString("number");
                 if (content2.equals("scuess")){
+                    closeProgressDialog("设备查询完毕，正在获取返回数据");
                     queryFromServer(server_url+"?type=531_hw_pon_down1&key="+MyKey.key()+"&id="+number , "county");
-
+                    Log.d("again",server_url+"?type=531_hw_pon_down1&key="+MyKey.key()+"&id="+number);
                 }
 
             }
@@ -277,8 +294,9 @@ public class Ont_Down_view extends AppCompatActivity {
                 String responseText = response.body().string();
                  Log.d("服务器返回",responseText);
                 boolean result = false;
-                if ("".equals(responseText)){
-                    Toast.makeText(Ont_Down_view.this, "未查询到数据", Toast.LENGTH_SHORT).show();
+                if ("[]".equals(responseText)){
+                    showToast("没有新下线的ONT");
+                    result = true;
                 }
                 else {
                     if ("county".equals(type)) {
@@ -302,7 +320,9 @@ public class Ont_Down_view extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("SHIBAI","网络加载失败");
+                e.printStackTrace();
                 // 通过runOnUiThread()方法回到主线程处理逻辑
+
                 Ont_Down_view.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -321,7 +341,7 @@ public class Ont_Down_view extends AppCompatActivity {
         for (Ont_Down ont_down:leibiao){
 //            Log.d("MainActivity", "COUNTY_ID is " + county.getCOUNTY_ID());
             ont_down = new Ont_Down(ont_down.getIP(),ont_down.getPON(),
-                    ont_down.getAHTHOR_VALUE(),ont_down.getBAND_ACCOUNT(),ont_down.getSTATE(),ont_down.getCOVER_DEVICE(),ont_down.getSJM());
+                    ont_down.getAHTHOR_VALUE(),ont_down.getBAND_ACCOUNT(),ont_down.getSTATE(),ont_down.getCOVER_DEVICE(),ont_down.getSJM(),ont_down.getFLOWID());
             sjm=ont_down.getSJM();
             mDatas.add(ont_down);
         }
@@ -342,7 +362,7 @@ public class Ont_Down_view extends AppCompatActivity {
                 if(progressDialog ==null)
                 {
                     progressDialog = new ProgressDialog(Ont_Down_view.this);
-                    progressDialog.setMessage("正在加载...");
+                    progressDialog.setMessage(msg);
                     progressDialog.setCanceledOnTouchOutside(false);
                 }
                 progressDialog.show();
@@ -360,5 +380,13 @@ public class Ont_Down_view extends AppCompatActivity {
             }
         });
     }
+    public void showToast(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Ont_Down_view.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
 
+    }
 }

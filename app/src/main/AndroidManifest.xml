@@ -58,6 +58,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".wh.Pon_search_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_PON_SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".zy.Olt_Ont_view"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -80,6 +88,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".wh.Dkm_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.Autofind_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.FH_Autofind_view"
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".wh.Oltport_view"

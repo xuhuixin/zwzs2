@@ -46,10 +46,15 @@ import qyw.xhx.zwzs.wh.Olt;
 import qyw.xhx.zwzs.zy.CountyAdapter;
 import qyw.xhx.zwzs.wh.Pon_view;
 import qyw.xhx.zwzs.util.DateUtil;
+import qyw.xhx.zwzs.util.MyKey;
+import qyw.xhx.zwzs.zy.Ont_Down_view;
+import qyw.xhx.zwzs.zy.Ont_Oltport_view;
+
 
 public class Pon_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ListView listView;
+    private ListView auto_find_view;
     private Button oltbutton;
     private Button backbtn;
     private TextView ponchaxun;
@@ -72,7 +77,7 @@ public class Pon_view extends AppCompatActivity {
     private MessageTransmit mTransmit;
     private MyApplication myApplication;//初始化全局变量
     private static final String SOCKET_IP = "122.80.61.118";
-    private static final int SOCKET_PORT = 9051;
+    private static final int SOCKET_PORT = 9061;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +87,8 @@ public class Pon_view extends AppCompatActivity {
         number=myApplication.getNumber();
         city=myApplication.getCity();
         server_url=myApplication.getServer_url();
-        Log.i("PON口查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
-        Log.i("PON口查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+//        Log.i("PON口查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+//        Log.i("PON口查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
 
         //创建属于主线程的handler
         handler=new Handler();
@@ -121,6 +126,7 @@ public class Pon_view extends AppCompatActivity {
     //方法：初始化View
     private void initView() {
         listView = (ListView) findViewById(R.id.list_view);
+        auto_find_view = (ListView) findViewById(R.id.auto_find_view);
         oltbutton=(Button) findViewById(R.id.olt_search);
         olteditText=(EditText) findViewById(R.id.olt);
         ponchaxun=(TextView) findViewById(R.id.pon_chaxun);
@@ -131,17 +137,8 @@ public class Pon_view extends AppCompatActivity {
     //方法；初始化Data
     private void initData(String id) {
         mDatas = new ArrayList<Olt>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        String t=format.format(new Date());
-//        Log.e("msg", t);
-        String key=Md5Utils.md5("khsl"+t);
-//        Log.d("key=",key);
-//        Log.d("输入",olteditText.getText().toString());
-//        Log.d("url",server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString());
-        queryFromServer(server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString() , "county");
-        //将数据装到集合中去
-//        County county = new County("天桥","小区数", "楼数", "房号数", "分光器数");
-//        mDatas.add(county);
+//        Log.d("MYKEY",MyKey.key());
+        queryFromServer(server_url+"?type=531_olt&key="+MyKey.key()+"&id="+olteditText.getText().toString() , "county");
         //为数据绑定适配器
         oltAdapter = new OltAdapter(this, mDatas);
         listView.setAdapter(oltAdapter);
@@ -149,26 +146,42 @@ public class Pon_view extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Olt olt =mDatas.get(position);
-//                Log.d("IP",olt.getDEV_IPADDR());
-//                Log.d("厂家",olt.getVENDOR());
                 olt_mc=olt.getUSER_LABEL();
                 olt_ip=olt.getDEV_IPADDR();
                 olt_cj=olt.getVENDOR();
-
+                Log.d("厂家",olt_cj);
                 //需要查询等待showProgressDialog
-//                将listview显示出来，同时listview 设为gone
-                ponchaxun.setVisibility(View.VISIBLE);
-                ponchaxun.setText("正在查询，请稍后....");
-                listView.setVisibility(View.INVISIBLE);
-//                需要在线程中
-                Thread loginRunnable = new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        initSocket(olt_ip,olt_cj);
-                    }
-                };
-                loginRunnable.start();
+//                这里跳转到Autofind_view.class
+                if (olt_cj.equals("华为")){
+                    Intent intent = new Intent(Pon_view.this,Autofind_view.class);
+                    //下一页上面显示OLT名称、oltip，同时传入oltcj
+                    intent.putExtra("olt_mc",olt_mc);
+                    intent.putExtra("olt_cj",olt_cj);
+                    intent.putExtra("olt_ip",olt_ip);
+                    startActivity(intent);
+                } else if (olt_cj.equals("烽火")){
+                    Intent intent = new Intent(Pon_view.this,FH_Autofind_view.class);
+                    //下一页上面显示OLT名称、oltip，同时传入oltcj
+                    intent.putExtra("olt_mc",olt_mc);
+                    intent.putExtra("olt_cj",olt_cj);
+                    intent.putExtra("olt_ip",olt_ip);
+                    startActivity(intent);
+                }
+
+
+////                将listview显示出来，同时listview 设为gone
+//                ponchaxun.setVisibility(View.VISIBLE);
+//                ponchaxun.setText("正在查询，请稍后....");
+//                listView.setVisibility(View.INVISIBLE);
+////                需要在线程中
+//                Thread loginRunnable = new Thread() {
+//                    @Override
+//                    public void run() {
+//                        super.run();
+//                        initSocket(olt_ip,olt_cj);
+//                    }
+//                };
+//                loginRunnable.start();
 
                 Toast.makeText(Pon_view.this,olt.getDEV_IPADDR(),Toast.LENGTH_SHORT).show();
             }
@@ -181,7 +194,6 @@ public class Pon_view extends AppCompatActivity {
         Log.d("yyyy",nowyear);
         int ny;
         ny = Integer.parseInt(nowyear);
-
         try {
             mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
             mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
@@ -189,7 +201,6 @@ public class Pon_view extends AppCompatActivity {
             String content = mReader.readLine();
             JSONObject jsonObject = new JSONObject(content);
             int key= jsonObject.getInt("key");
-//            Log.d("key",Integer.toString(key));
             Log.d("第一次",content);
             if (content!=null){
                 //发送验证信息
@@ -214,12 +225,8 @@ public class Pon_view extends AppCompatActivity {
                 if (result.equals("success")){
                     message=message.replace(",","\n\n");
                     message="OLT名称:"+olt_mc+"\n\n"+message;
-
                     handler.post(runnableUi);
                 }
-//                if (content2.equals("NPASS")){
-//                    showToast("用户名或者密码错误");
-//                }
             }
 
         } catch (Exception e) {

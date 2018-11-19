@@ -10,8 +10,9 @@ public class Ont_Down {
     private String STATE;
     private String COVER_DEVICE;
     private String SJM;
+    private String FLOWID;
     public Ont_Down(){}
-    public Ont_Down(String IP,String PON, String AHTHOR_VALUE, String BAND_ACCOUNT, String STATE, String COVER_DEVICE, String SJM){
+    public Ont_Down(String IP,String PON, String AHTHOR_VALUE, String BAND_ACCOUNT, String STATE, String COVER_DEVICE, String SJM, String FLOWID){
         this.IP=IP;
         this.PON=PON;
         this.AHTHOR_VALUE=AHTHOR_VALUE;
@@ -19,6 +20,7 @@ public class Ont_Down {
         this.STATE=STATE;
         this.COVER_DEVICE=COVER_DEVICE;
         this.SJM=SJM;
+        this.FLOWID=FLOWID;
     }
 
     public String getIP() {
@@ -62,6 +64,12 @@ public class Ont_Down {
     }
     public void setSJM(String SJM){
         this.SJM=SJM;
+    }
+    public String getFLOWID() {
+        return FLOWID;
+    }
+    public void setFLOWID(String FLOWID){
+        this.FLOWID=FLOWID;
     }
 
 }

@@ -66,11 +66,14 @@ public class Home_fragment2 extends Fragment {
         WebSettings settings = mWeb.getSettings();
         settings.setJavaScriptEnabled(true);
         mWeb.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWeb.getSettings().setSupportZoom(true);  //支持放大缩小
+        mWeb.getSettings().setSupportZoom(false);  //支持放大缩小
         mWeb.getSettings().setBuiltInZoomControls(true);
+        //屏幕自适应
+        mWeb.getSettings().setUseWideViewPort(true);
+        mWeb.getSettings().setLoadWithOverviewMode(true);
         //加密函数
 
-
+        Log.d("KEY",key);
         mWeb.loadUrl("http://122.80.61.118:9011/zwzs_new/yyhf.asp?sjhm="+myApplication.getNumber()+"&key="+key);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);

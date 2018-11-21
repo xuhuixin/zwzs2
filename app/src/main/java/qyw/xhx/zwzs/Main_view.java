@@ -18,7 +18,7 @@ public class Main_view extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout);
+        setContentView(R.layout.testlayout);
         myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
         //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
         Log.i("菜单页面", "InitLabel:"+myApplication.getNumber());

@@ -6,8 +6,8 @@ android {
         applicationId "qyw.xhx.zwzs"
         minSdkVersion 20
         targetSdkVersion 27
-        versionCode 26
-        versionName "1.0.26"
+        versionCode 32
+        versionName "1.0.32"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }

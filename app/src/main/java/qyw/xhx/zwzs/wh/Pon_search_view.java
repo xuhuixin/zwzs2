@@ -1,6 +1,7 @@
 package qyw.xhx.zwzs.wh;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +18,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,7 +32,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.R;
-import qyw.xhx.zwzs.util.DateUtil;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
 import qyw.xhx.zwzs.util.MessageTransmit;
@@ -46,6 +42,7 @@ public class Pon_search_view extends AppCompatActivity {
     private Button oltbutton;
     private Button backbtn;
     private TextView ponchaxun;
+    private TextView title;
     private List<Olt> mDatas;
     private OltAdapter oltAdapter;
     private EditText olteditText;
@@ -54,9 +51,11 @@ public class Pon_search_view extends AppCompatActivity {
     private String olt_ip;
     private String olt_cj;
     private String olt_mc;
+    private String olt_id;
     private String message;
     private String number;
     private String city;
+    private String city_id;
     private String server_url;
 
     private Socket mSocket;
@@ -74,13 +73,15 @@ public class Pon_search_view extends AppCompatActivity {
         myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
         number=myApplication.getNumber();
         city=myApplication.getCity();
+        city_id=myApplication.getCity_id();
         server_url=myApplication.getServer_url();
-//        Log.i("PON口查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
-//        Log.i("PON口查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+        Log.i("非标查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+        Log.i("非标查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
 
         //创建属于主线程的handler
         handler=new Handler();
         initView();
+        title.setText("OLT查询");
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +93,6 @@ public class Pon_search_view extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String id =olteditText.getText().toString();
-                if (city.equals("济南")){
                     if (id.equals("")){
                         Toast.makeText(Pon_search_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
                     }else{
@@ -101,11 +101,6 @@ public class Pon_search_view extends AppCompatActivity {
                         listView.setVisibility(View.VISIBLE);
                         Toast.makeText(Pon_search_view.this, "有输入", Toast.LENGTH_SHORT).show();
                     }
-                }else {
-                    Toast.makeText(Pon_search_view.this, "非济南账号，无法使用", Toast.LENGTH_SHORT).show();
-                }
-
-
             }
         });
 
@@ -119,6 +114,7 @@ public class Pon_search_view extends AppCompatActivity {
         ponchaxun=(TextView) findViewById(R.id.pon_chaxun);
         ponchaxun.setMovementMethod(ScrollingMovementMethod.getInstance());
         backbtn=(Button) findViewById(R.id.back_button);
+        title=(TextView) findViewById(R.id.title_text);
 
     }
     //方法；初始化Data
@@ -126,15 +122,11 @@ public class Pon_search_view extends AppCompatActivity {
         mDatas = new ArrayList<Olt>();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String t=format.format(new Date());
-//        Log.e("msg", t);
         String key=Md5Utils.md5("khsl"+t);
-//        Log.d("key=",key);
-//        Log.d("输入",olteditText.getText().toString());
-//        Log.d("url",server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString());
-        queryFromServer(server_url+"?type=531_olt&key="+key+"&id="+olteditText.getText().toString() , "county");
-        //将数据装到集合中去
-//        County county = new County("天桥","小区数", "楼数", "房号数", "分光器数");
-//        mDatas.add(county);
+        Log.d("key",key);
+
+        queryFromServer(server_url+"?type=sheng_olt&key="+key+"&id="+olteditText.getText().toString()+"&city_id="+city_id , "county");
+
         //为数据绑定适配器
         oltAdapter = new OltAdapter(this, mDatas);
         listView.setAdapter(oltAdapter);
@@ -142,92 +134,23 @@ public class Pon_search_view extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Olt olt =mDatas.get(position);
-//                Log.d("IP",olt.getDEV_IPADDR());
-//                Log.d("厂家",olt.getVENDOR());
                 olt_mc=olt.getUSER_LABEL();
                 olt_ip=olt.getDEV_IPADDR();
                 olt_cj=olt.getVENDOR();
+                olt_id=olt.getOLT_ID();
+                Toast.makeText(Pon_search_view.this,olt.getOLT_ID(),Toast.LENGTH_SHORT).show();
+                //跳转Oltport_view.class
+                Intent intent = new Intent(Pon_search_view.this,Oltport_downview.class);
+                intent.putExtra("olt_id",olt_id);
+                intent.putExtra("olt_mc",olt_mc);
+                intent.putExtra("olt_cj",olt_cj);
+                intent.putExtra("olt_ip",olt_ip);
+                startActivity(intent);
 
-                //需要查询等待showProgressDialog
-//                将listview显示出来，同时listview 设为gone
-                ponchaxun.setVisibility(View.VISIBLE);
-                ponchaxun.setText("正在查询，请稍后....");
-                listView.setVisibility(View.INVISIBLE);
-//                需要在线程中
-                Thread loginRunnable = new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        initSocket(olt_ip,olt_cj);
-                    }
-                };
-                loginRunnable.start();
-
-                Toast.makeText(Pon_search_view.this,olt.getDEV_IPADDR(),Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-    private void initSocket(String olt_ip,String olt_cj) {
-        mSocket = new Socket();
-        String nowyear=DateUtil.getNowYear();
-        Log.d("yyyy",nowyear);
-        int ny;
-        ny = Integer.parseInt(nowyear);
-
-        try {
-            mSocket.connect(new InetSocketAddress(SOCKET_IP, SOCKET_PORT), 3000);
-            mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-            mWriter = mSocket.getOutputStream();
-            String content = mReader.readLine();
-            JSONObject jsonObject = new JSONObject(content);
-            int key= jsonObject.getInt("key");
-//            Log.d("key",Integer.toString(key));
-            Log.d("第一次",content);
-            if (content!=null){
-                //发送验证信息
-                int jiami=ny+key;
-                JSONObject fanhui = new JSONObject();
-                fanhui.put("askey", jiami);
-                fanhui.put("action", "olt");
-                fanhui.put("ip", olt_ip);
-                fanhui.put("cj", olt_cj);
-                System.out.println(fanhui.toString(1));
-                mWriter.write(fanhui.toString(1).getBytes());
-                String content1 = mReader.readLine();
-                Log.d("第二次",content1);
-//                解析
-                JSONObject jsonObject_ok = new JSONObject(content1);
-                String result= jsonObject_ok.getString("result");
-                message= jsonObject_ok.getString("message");
-//                String number= jsonObject_ok.getString("number");
-                Log.d("result",result);
-                Log.d("message",message);
-//                Log.d("number",number);
-                if (result.equals("success")){
-                    message=message.replace(",","\n\n");
-                    message="OLT名称:"+olt_mc+"\n\n"+message;
-
-                    handler.post(runnableUi);
-                }
-//                if (content2.equals("NPASS")){
-//                    showToast("用户名或者密码错误");
-//                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    // 构建Runnable对象，在runnable中更新界面
-    Runnable runnableUi=new Runnable() {
-        @Override
-        public void run() {
-            //更新界面
-            ponchaxun.setText(message);
-        }
-    };
-
 
     //根据传入的地址从服务器查询数据
     private void queryFromServer(String address, final String type) {

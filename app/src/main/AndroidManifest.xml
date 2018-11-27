@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
@@ -31,6 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/BaseStyle"
         >
+        <!--登录-主界面-->
         <activity android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
@@ -38,7 +39,115 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+
         </activity>
+        <activity android:name=".Main_view"
+            android:theme="@style/AppTheme"/>
+
+        <!--维护界面主视图-->
+        <!--pon口光猫新发现-->
+        <activity android:name=".wh.Pon_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_PON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Autofind_view"
+            android:theme="@style/AppTheme">
+        </activity><!--华为OLT新发现-->
+        <activity android:name=".wh.FH_Autofind_view"
+            android:theme="@style/AppTheme">
+        </activity><!--烽火OLT新发现-->
+        <!--PON口中断查询-->
+        <activity android:name=".wh.Pon_search_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_PON_SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Oltport_downview"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.Hw_pon_down_view"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <!--端口满查询-->
+        <activity android:name=".wh.Dkm_new_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_DKM"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Dkm_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.Cover_view"
+            android:theme="@style/AppTheme"/>
+        <!--非标小区查询-->
+        <activity android:name=".wh.Feibiao_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_FEIBIAO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Oltport_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.Fenguangqi_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".wh.House_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <!--鉴权码查询-->
+        <activity android:name=".wh.Jqm_new_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_JQM"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <!--资源主界面-->
+        <!--ONT下线核对-->
+        <activity android:name=".zy.Olt_Ont_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_ONTOFFLINE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".zy.Ont_Oltport_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".zy.Ont_Down_view"
+            android:theme="@style/AppTheme">
+        </activity>
+        <!--光网终端扫码-->
+        <activity android:name=".CommonScanActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_SAOMIAO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Saomiao_view"
+            android:theme="@style/AppTheme"/>
+
+
+
+
+
+
+
+        <!--未支撑-->
         <activity android:name=".zy.County_view"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -48,92 +157,23 @@
         </activity>
         <activity android:name=".zy.Zone_view"
             android:theme="@style/AppTheme"/>
+        <!--测试用-->
         <activity android:name=".LoginAfterActivity"/>
-        <activity android:name=".Main_view"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".wh.Pon_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_PON"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".wh.Pon_search_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_PON_SEARCH"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
 
-        <activity android:name=".zy.Olt_Ont_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_ONTOFFLINE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".wh.Feibiao_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_FEIBIAO"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".wh.Jqm_new_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_JQM"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".wh.Dkm_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".wh.Autofind_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".wh.FH_Autofind_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".wh.Oltport_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".zy.Ont_Oltport_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".zy.Ont_Down_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".wh.Fenguangqi_view"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".wh.House_view"
-            android:theme="@style/AppTheme">
-        </activity>
+
+
+
+
+
+
         <activity android:name=".wh.Dkm1_view"
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".wh.Dkm_new_view"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_DKM"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-         </activity>
-        <activity android:name=".CommonScanActivity"
-            android:theme="@android:style/Theme.Light.NoTitleBar">
-            <intent-filter>
-                <action android:name="qyw.xhx.zwzs.ACTION_SAOMIAO"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
 
-        <activity android:name=".wh.Cover_view"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".wh.Saomiao_view"
-            android:theme="@style/AppTheme"/>
+
+
+
         <activity android:name=".ZxMainActivity"
             android:theme="@style/AppTheme"/>
         <!--<activity-->

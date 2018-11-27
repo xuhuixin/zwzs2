@@ -23,6 +23,7 @@ public class Autofind_Adapter extends ListViewAdapter<Autofind> {
         ((TextView) holder.getView(R.id.pon_number)).setText(autofind.getPon_number());
         ((TextView) holder.getView(R.id.pon_kou)).setText(autofind.getPon_kou());
         ((TextView) holder.getView(R.id.ont_sn)).setText(autofind.getOnt_sn());
+        ((TextView) holder.getView(R.id.pwd)).setText(autofind.getPwd());
         ((TextView) holder.getView(R.id.autofind_time)).setText(autofind.getAutofind_time());
     }
 }

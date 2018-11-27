@@ -103,6 +103,26 @@
         >
     </View>
     <Button
+        android:id="@+id/zykc"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@drawable/btn_white_selector"
+        android:drawableLeft="@drawable/zykc"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dip"
+        android:text="资源扫码快查（开发中）"
+        android:textColor="@color/black"
+        android:nextFocusLeft="@dimen/dp_10"
+
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"
+        >
+    </View>
+    <Button
         android:id="@+id/ont_offline"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"

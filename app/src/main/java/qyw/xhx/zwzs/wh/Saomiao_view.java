@@ -35,6 +35,7 @@ import Jack.WewinPrinterHelper.Print;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.MyBaseAdapter;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.lanya;
@@ -67,11 +68,23 @@ public class Saomiao_view extends AppCompatActivity {
     private String xmlStr1;
     private ImageView imageView1;
     public boolean flag = true;
+    private String city_id;
+    private String city;
+    private String number;
+    private String server_url;
+    private MyApplication myApplication;//初始化全局变量
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.saomiao_layout);
         p = new Print(Saomiao_view.this);
+        myApplication = (MyApplication) getApplication(); //获得自定义的应用程序YApp
+        number=myApplication.getNumber();
+        city=myApplication.getCity();
+        city_id=myApplication.getCity_id();
+        server_url=myApplication.getServer_url();
+
+
 ////        接收传值,接收鉴权码
         Intent intent =getIntent();
         id=intent.getStringExtra("pwd");
@@ -118,7 +131,7 @@ public class Saomiao_view extends AppCompatActivity {
         key=Md5Utils.md5("khsl"+format.format(new Date()));
 //        pwd=dkmeditText.getText().toString();
 //        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&id="+id+"&key="+key;
-        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&city_id=531&id="+id+"&key="+key;
+        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&city_id="+city_id+"&id="+id+"&key="+key;
         Log.d("dizhi",url);
         queryFromServer(url,"county");
     }

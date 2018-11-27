@@ -178,6 +178,8 @@ public class Dkm_view extends AppCompatActivity {
                 viewHolder.flow_title =(TextView) convertView.findViewById(R.id.flow_title);
                 viewHolder.end_time =(TextView) convertView.findViewById(R.id.end_time);
                 viewHolder.ahthor_value =(TextView) convertView.findViewById(R.id.ahthor_value);
+                viewHolder.olt_name =(TextView) convertView.findViewById(R.id.olt_name);
+                viewHolder.olt_pon =(TextView) convertView.findViewById(R.id.olt_pon);
                 viewHolder.grid_name =(TextView) convertView.findViewById(R.id.grid_name);
                 viewHolder.full_addr =(TextView) convertView.findViewById(R.id.full_addr);
                 viewHolder.btn1 =(RadioButton) convertView.findViewById(R.id.btn1);
@@ -202,8 +204,18 @@ public class Dkm_view extends AppCompatActivity {
             viewHolder.flow_title.setText((String)((HashMap)dkmArrayList.get(position)).get("flow_title"));
             viewHolder.end_time.setText((String)((HashMap)dkmArrayList.get(position)).get("end_time"));
             viewHolder.ahthor_value.setText((String)((HashMap)dkmArrayList.get(position)).get("ahthor_value"));
+            viewHolder.olt_name.setText((String)((HashMap)dkmArrayList.get(position)).get("olt_name"));
+            viewHolder.olt_pon.setText((String)((HashMap)dkmArrayList.get(position)).get("olt_pon"));
             viewHolder.grid_name.setText((String)((HashMap)dkmArrayList.get(position)).get("grid_name"));
             viewHolder.full_addr.setText((String)((HashMap)dkmArrayList.get(position)).get("full_addr"));
+            if (((HashMap)dkmArrayList.get(position)).get("hold_pos_id").equals("0")){
+                Log.d("dkm_view","hold_pos_id is null");
+                viewHolder.fgqid.setVisibility(View.INVISIBLE);
+                viewHolder.btn1.setVisibility(View.INVISIBLE);
+                viewHolder.btn2.setVisibility(View.INVISIBLE);
+                viewHolder.btnlx1.setVisibility(View.INVISIBLE);
+                viewHolder.btnlx2.setVisibility(View.INVISIBLE);
+            }else{
             viewHolder.fgqid.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -327,7 +339,7 @@ public class Dkm_view extends AppCompatActivity {
                 }
             });
 
-
+            }
 
 
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -350,6 +362,8 @@ public class Dkm_view extends AppCompatActivity {
         TextView cover_port;
         TextView end_time;
         TextView ahthor_value;
+        TextView olt_name;
+        TextView olt_pon;
         TextView grid_name;
         TextView full_addr;
         ImageView imageView1;
@@ -417,6 +431,7 @@ public class Dkm_view extends AppCompatActivity {
         dkmArrayList.clear();
         for (Dkm dkm:leibiao){
             Log.d("MainActivity", "COUNTY_ID is " + dkm.getCOVER_DEVICE());
+            Log.d("MainActivity", "hold_pos_id is " + dkm.getHOLD_POS_ID());
 //            如果是历史库数据重新查询
             dkmMap = new HashMap();
             dkmMap.put("zh_label",dkm.getZH_LABEL());
@@ -426,6 +441,8 @@ public class Dkm_view extends AppCompatActivity {
             dkmMap.put("flow_title",dkm.getFLOW_TITLE());
             dkmMap.put("end_time",dkm.getEND_TIME());
             dkmMap.put("ahthor_value",dkm.getAHTHOR_VALUE());
+            dkmMap.put("olt_name",dkm.getOLT_NAME());
+            dkmMap.put("olt_pon",dkm.getOLT_PON());
             dkmMap.put("grid_name",dkm.getGRID_NAME());
             dkmMap.put("cover_type",dkm.getCOVER_TYPE());
             dkmMap.put("hold_pos_id",dkm.getHOLD_POS_ID());

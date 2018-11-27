@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:fadingEdge="vertical">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -54,6 +59,26 @@
         android:background="@color/black"
         >
     </View>
+    <Button
+        android:id="@+id/ggl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ggl"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dip"
+        android:textColor="@color/black"
+        android:text="光功率查询（济南用-开发中）"
+        android:nextFocusLeft="@dimen/dp_10"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"
+        >
+    </View>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -119,3 +144,4 @@
     </View>
 
 </LinearLayout>
+</ScrollView>

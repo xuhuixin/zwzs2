@@ -175,7 +175,13 @@ public class Autofind_view extends AppCompatActivity {
                 mWriter.write(fanhui.toString(1).getBytes());
                 String content1 = mReader.readLine();
                 Log.d("第二次",content1);
-                if (content1!=null) {
+                if (content1.equals("[OLT无法访问]")) {
+                    closeProgressDialog("OLT无法访问，请稍后再试");
+                    showToast("OLT无法访问，请稍后再试");
+                }else if(content1.equals("[]")){
+                    closeProgressDialog("无新发现光猫");
+                    showToast("无新发现光猫");
+                }else {
                     parseJSONWithGSON(content1); //。。。。。
                 }
 //                解析
@@ -205,7 +211,7 @@ public class Autofind_view extends AppCompatActivity {
         for (Autofind autofind:leibiao){
             Log.d("autofind_view", "Pon_number is " + autofind.getPon_number());
             autofind = new Autofind(autofind.getPon_number(),
-                    autofind.getPon_kou(),autofind.getOnt_sn(),autofind.getAutofind_time());
+                    autofind.getPon_kou(),autofind.getOnt_sn(),autofind.getPwd(),autofind.getAutofind_time());
             mDatas.add(autofind);
         }
         Autofind_view.this.runOnUiThread(new Runnable() {

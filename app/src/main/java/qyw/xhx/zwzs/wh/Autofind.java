@@ -5,12 +5,14 @@ public class Autofind {
     private String Pon_number; //注意大小写
     private String Pon_kou;
     private String Ont_sn;
+    private String Pwd;
     private String Autofind_time;
 
-    public Autofind(String Pon_number, String Pon_kou, String Ont_sn, String Autofind_time){
+    public Autofind(String Pon_number, String Pon_kou, String Ont_sn,String Pwd, String Autofind_time){
         this.Pon_number=Pon_number;
         this.Pon_kou=Pon_kou;
         this.Ont_sn=Ont_sn;
+        this.Pwd=Pwd;
         this.Autofind_time=Autofind_time;
      }
 
@@ -31,6 +33,12 @@ public class Autofind {
     }
     public void setOnt_sn(String Ont_sn){
         this.Ont_sn=Ont_sn;
+    }
+    public String getPwd() {
+        return Pwd;
+    }
+    public void setPwd(String Pwd){
+        this.Pwd=Pwd;
     }
     public String getAutofind_time() {
         return Autofind_time;

@@ -1,10 +1,15 @@
 package qyw.xhx.zwzs;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -85,6 +91,37 @@ public class Home_fragment2 extends Fragment {
         mWeb.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //无缓存模式
         mWeb.getSettings().setAppCachePath(cacheDirPath); //设置缓存路径
         mWeb.getSettings().setAppCacheEnabled(false); //开启缓存功能
+
+        //不加，单击超连接，启动系统的浏览器，加了之后在我们自己的APP中显示网页。
+//        settings.setJavaScriptEnabled(true);
+        mWeb.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading
+                    (WebView view, String url) {
+                Log.i("用户单击超连接", url);
+                //判断用户单击的是那个超连接
+                String tag="tada:tel";
+                if (url.contains(tag))
+                {
+                    String mobile=url.substring(url.lastIndexOf("/")+1);
+                    Log.d("tel",mobile);
+                    Uri uri=Uri.parse("tel:"+mobile);
+                    Intent intent=new Intent(Intent.ACTION_DIAL,uri);
+                    startActivity(intent);
+                    //这个超连接,java已经处理了，webview不要处理了
+                    return true;
+                }
+
+                return super.shouldOverrideUrlLoading(view, url);
+
+
+
+//                return super.shouldOverrideUrlLoading(view, url);
+            }
+        });
+
+
+
 
         mWeb.setOnKeyListener(new View.OnKeyListener() {
 

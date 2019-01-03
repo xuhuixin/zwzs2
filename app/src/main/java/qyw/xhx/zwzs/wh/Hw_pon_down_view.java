@@ -15,9 +15,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -25,20 +27,26 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 import qyw.xhx.zwzs.MyApplication;
 import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.util.DateUtil;
+import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.MessageTransmit;
 import qyw.xhx.zwzs.util.MyKey;
+
 
 public class Hw_pon_down_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ListView listView;
     private Button backbtn;
-    private Button againbtn;
+    private Button message_btn;
     private TextView title;
     private TextView oltmc;
     private List<Pon_down> mDatas;
+//    private List<mess> mDatasmess;
     private Pon_down_Adapter pon_down_adapter;
     private Handler handler=null;
     private String ponkou;
@@ -47,13 +55,16 @@ public class Hw_pon_down_view extends AppCompatActivity {
     private String pon_name;
     private String ponkou_id;
     private String olt_ip;
-    private String message;
+    private TextView message_title;
+    private TextView message;
+    private String message_all;
     private String number;
     private String sjm;
     private String city;
     private String city_id;
     private String server_url;
     private Socket mSocket;
+
     private BufferedReader mReader = null;
     private OutputStream mWriter = null;
     private MessageTransmit mTransmit;
@@ -72,7 +83,9 @@ public class Hw_pon_down_view extends AppCompatActivity {
         olt_ip=intent.getStringExtra("olt_ip");
         olt_cj=intent.getStringExtra("olt_cj");
         pon_name=intent.getStringExtra("pon_name");
+        ponkou_id=intent.getStringExtra("ponkou_id");
         Log.d("接收到的olt_name",olt_name);
+        Log.d("接收到的olt_port_id",ponkou_id);
         Log.d("接收到的olt_cj",olt_cj);
         Log.d("接收到的olt_ip",olt_ip);
         Log.d("接收到的pon_name",pon_name);
@@ -97,17 +110,105 @@ public class Hw_pon_down_view extends AppCompatActivity {
                 finish();
             }
         });
+        message_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("MYKEY",MyKey.key());
+                queryFromServer(server_url+"?type=531_pon_message&key="+MyKey.key()+"&olt_port_id="+ponkou_id , "county");
+//                mDatas = new ArrayList<Oltport>();
+            }
+        });
+    }
+    //根据传入的地址从服务器查询数据
+    private void queryFromServer(String address, final String type) {
+//        showProgressDialog();
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                boolean result = false;
+                if ("".equals(responseText)){
+                    Toast.makeText(Hw_pon_down_view.this, "未查询到数据", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if ("county".equals(type)) {
+                        Log.d("aaaaaaa", responseText);
+                        /**使用gson解析**/
+                        parseJSONWithGSON1(responseText);
+                        result = true;
+                    }
+                }
+                if (result) {
+                    Log.d("bbbbbb", "判断是否下载完毕");
+                    Hw_pon_down_view.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+//                            closeProgressDialog();
+//                            Adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("SHIBAI","网络加载失败");
+                // 通过runOnUiThread()方法回到主线程处理逻辑
+                Hw_pon_down_view.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        closeProgressDialog();
+                        Toast.makeText(Hw_pon_down_view.this, "加载失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+    private void parseJSONWithGSON1(String jsonData) {
+        message_all="";
+        try{
+            JSONArray jsonArray =new JSONArray(jsonData);
+            for (int i=0;i<jsonArray.length();i++){
+                JSONObject jsonObject =jsonArray.getJSONObject(i);
+                String OLTPORT_ID=jsonObject.getString("OLTPORT_ID");
+                String FGFW=jsonObject.getString("FGFW");
+                String SL=jsonObject.getString("SL");
+                message_all=message_all+FGFW+";";
+                Log.d("message_all",message_all);
+            }
+            upmessage(message_all);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-
+//        Gson gson = new Gson();
+//        /**County类一定注意大写，因为传过来的是大写**/
+//        List<Olt> leibiao=gson.fromJson(jsonData,new TypeToken<List<Olt>>(){}.getType());
+//        mDatas.clear();
+//        for (Olt olt:leibiao){
+////            Log.d("MainActivity", "COUNTY_ID is " + county.getCOUNTY_ID());
+//            olt = new Olt(olt.getUSER_LABEL(),olt.getEQUIP_ROOM(),olt.getDEV_IPADDR(),olt.getVENDOR(),olt.getOLT_ID());
+////            mDatas.add(olt);
+//        }
+//        Pon_search_view.this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                oltAdapter.notifyDataSetChanged();
+//            }
+//        });
 
     }
+
+
+
     //方法：初始化View
     private void initView() {
         listView = (ListView) findViewById(R.id.pon_down_view);
         backbtn=(Button) findViewById(R.id.back_button);
-//        againbtn=(Button) findViewById(R.id.again);
+        message_btn=(Button) findViewById(R.id.message_btn);
         title=(TextView) findViewById(R.id.title_text);
         oltmc=(TextView) findViewById(R.id.olt_mc);
+        message=(TextView) findViewById(R.id.message);
+        message_title=(TextView) findViewById(R.id.message_title);
     }
     //方法；初始化Data
     private void initData() {
@@ -147,6 +248,7 @@ public class Hw_pon_down_view extends AppCompatActivity {
         Log.d("yyyy",nowyear);
         int ny;
         ny = Integer.parseInt(nowyear);
+
 //        Log.d("username",us);
 //        Log.d("password",ps);
 
@@ -177,9 +279,10 @@ public class Hw_pon_down_view extends AppCompatActivity {
                     closeProgressDialog("OLT无法访问，请稍后再试");
                     showToast("OLT无法访问，请稍后再试");
                 }else if(content1.equals("[]")){
-                    closeProgressDialog("无新发现光猫");
-                    showToast("无新发现光猫");
+                    closeProgressDialog("无数据");
+                    showToast("无数据");
                 }else {
+
                     parseJSONWithGSON(content1); //。。。。。
                 }
 //                解析
@@ -219,6 +322,9 @@ public class Hw_pon_down_view extends AppCompatActivity {
             @Override
             public void run() {
                 pon_down_adapter.notifyDataSetChanged();
+                message.setVisibility(View.VISIBLE);
+                message_title.setVisibility(View.VISIBLE);
+                message_btn.setVisibility(View.VISIBLE);
                 closeProgressDialog("设备查询完毕，正在获取返回数据");
 //                againbtn.setVisibility(View.VISIBLE);
             }
@@ -237,6 +343,17 @@ public class Hw_pon_down_view extends AppCompatActivity {
                     progressDialog.setCanceledOnTouchOutside(false);
                 }
                 progressDialog.show();
+            }
+        });
+    }
+
+    public void upmessage(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("msg",msg);
+                message.setText(msg);
+
             }
         });
     }

@@ -69,7 +69,7 @@
         android:gravity="center_vertical"
         android:drawablePadding="10dip"
         android:textColor="@color/black"
-        android:text="光功率查询（济南用-开发中）"
+        android:text="光功率查询（济南用）"
         android:nextFocusLeft="@dimen/dp_10"
         />
     <View
@@ -142,6 +142,24 @@
         android:background="@color/black"
         >
     </View>
-
+    <Button
+        android:id="@+id/zdzy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/zhongduan"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dip"
+        android:textColor="@color/black"
+        android:text="终端资源查询"
+        android:nextFocusLeft="@dimen/dp_10"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"
+        >
+    </View>
 </LinearLayout>
 </ScrollView>

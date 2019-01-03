@@ -58,7 +58,7 @@ import qyw.xhx.zwzs.utils.Constant;
 import qyw.xhx.zwzs.widget.LoadingDialog;
 import qyw.xhx.zwzs.zy.County_view;
 import qyw.xhx.zwzs.zy.Zone_view;
-
+import qyw.xhx.zwzs.util.MyKey;
 import static android.media.CamcorderProfile.get;
 
 public class Dkm_view extends AppCompatActivity {
@@ -145,10 +145,11 @@ public class Dkm_view extends AppCompatActivity {
     //方法；初始化Data
     private void initData(String id) {
 //        mDatas = new ArrayList<Dkm>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        key=Md5Utils.md5("khsl"+format.format(new Date()));
-//        pwd=dkmeditText.getText().toString();
-        url=server_url+"?type=dkm_sheng2&id="+id+"&key="+key+"&city_id="+city_id;
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+//        key=Md5Utils.md5("khsl"+format.format(new Date()));
+////        pwd=dkmeditText.getText().toString();
+//        Log.d("MYKEY",MyKey.key());
+        url=server_url+"?type=dkm_sheng2&id="+id+"&key="+MyKey.key()+"&city_id="+city_id;
         queryFromServer(url,"county");
     }
 

@@ -44,40 +44,51 @@
             android:layout_height="wrap_content"
             android:text="上页传来的OLT及PON口"/>
 
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40">
-        <ImageView
-            android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/pon_down_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/olt_lan"
-            />
-        <TextView
-            android:id="@+id/pon_kou"
-            android:layout_width="0dp"
+            android:visibility="visible">
+        </ListView>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            android:text="PON口"/>
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            android:text="状态"/>
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="长按内容可进行复制"
+                android:visibility="invisible"/>
+            <Button
+                android:id="@+id/message_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:text="查询PON口覆盖范围"/>
+        </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black"
+            android:layout_marginTop="5dp">
+        </View>
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PON口覆盖范围"
+            android:textColor="@color/black"
+            android:textIsSelectable="true"
+            android:visibility="invisible"/>
     </LinearLayout>
-    <ListView
-        android:id="@+id/pon_down_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-    </ListView>
 </LinearLayout>

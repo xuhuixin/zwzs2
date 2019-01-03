@@ -19,12 +19,12 @@ public class Dkm {
     private String HOUSE_ID;
     private String OLT_NAME;
     private String OLT_PON;
-
+    private String DEV_IPADDR;
 
     public Dkm(String ZH_LABEL, String FULL_ADDR, String FLOWID, String COVER_DEVICE,
                String COVER_PORT,String GRID_NAME,String COVER_TYPE,String END_TIME,
                String FLOW_TITLE,String HOLD_POS_ID,String AHTHOR_VALUE,String HOUSE_ID,
-               String OLT_NAME,String OLT_PON){
+               String OLT_NAME,String OLT_PON,String DEV_IPADDR){
         this.ZH_LABEL=ZH_LABEL;
         this.FULL_ADDR=FULL_ADDR;
         this.FLOWID=FLOWID;
@@ -39,6 +39,7 @@ public class Dkm {
         this.HOUSE_ID=HOUSE_ID;
         this.OLT_NAME=OLT_NAME;
         this.OLT_PON=OLT_PON;
+        this.DEV_IPADDR=DEV_IPADDR;
      }
 
     public String getZH_LABEL() {
@@ -120,6 +121,13 @@ public class Dkm {
     public void setOLT_NAME(String OLT_NAME){
         this.OLT_NAME=OLT_NAME;
     }
+    public String getDEV_IPADDR() {
+        return DEV_IPADDR;
+    }
+    public void setDEV_IPADDR(String DEV_IPADDR){
+        this.DEV_IPADDR=DEV_IPADDR;
+    }
+
     public String getOLT_PON() {
         return OLT_PON;
     }

@@ -41,6 +41,7 @@ import qyw.xhx.zwzs.R;
 import qyw.xhx.zwzs.lanya;
 import qyw.xhx.zwzs.util.HttpUtil;
 import qyw.xhx.zwzs.util.Md5Utils;
+import qyw.xhx.zwzs.util.MyKey;
 
 public class Saomiao_view extends AppCompatActivity {
     private ProgressDialog progressDialog;
@@ -127,11 +128,11 @@ public class Saomiao_view extends AppCompatActivity {
     //方法；初始化Data
     private void initData(String id) {
 //        mDatas = new ArrayList<Dkm>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        key=Md5Utils.md5("khsl"+format.format(new Date()));
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+//        key=Md5Utils.md5("khsl"+format.format(new Date()));
 //        pwd=dkmeditText.getText().toString();
 //        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&id="+id+"&key="+key;
-        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&city_id="+city_id+"&id="+id+"&key="+key;
+        url="https://ai.iorai.com/webservice/newjk.ashx?type=dkm_saomiao&city_id="+city_id+"&id="+id+"&key="+MyKey.key();
         Log.d("dizhi",url);
         queryFromServer(url,"county");
     }

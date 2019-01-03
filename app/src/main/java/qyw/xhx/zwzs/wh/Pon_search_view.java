@@ -75,8 +75,8 @@ public class Pon_search_view extends AppCompatActivity {
         city=myApplication.getCity();
         city_id=myApplication.getCity_id();
         server_url=myApplication.getServer_url();
-        Log.i("非标查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
-        Log.i("非标查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+//        Log.i("非标查询", "InitLabel:"+myApplication.getNumber());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
+//        Log.i("非标查询", "InitLabel:"+myApplication.getCity());   //将我们放到进程中的全局变量拿出来，看是不是我们曾经设置的值
 
         //创建属于主线程的handler
         handler=new Handler();
@@ -93,13 +93,17 @@ public class Pon_search_view extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String id =olteditText.getText().toString();
-                    if (id.equals("")){
-                        Toast.makeText(Pon_search_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
+                    if (city.equals("济南")){
+                        if (id.equals("")){
+                            Toast.makeText(Pon_search_view.this, "输入数据为空", Toast.LENGTH_SHORT).show();
+                        }else{
+                            initData(id);
+                            ponchaxun.setVisibility(View.GONE);
+                            listView.setVisibility(View.VISIBLE);
+                            Toast.makeText(Pon_search_view.this, "有输入", Toast.LENGTH_SHORT).show();
+                        }
                     }else{
-                        initData(id);
-                        ponchaxun.setVisibility(View.GONE);
-                        listView.setVisibility(View.VISIBLE);
-                        Toast.makeText(Pon_search_view.this, "有输入", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Pon_search_view.this, "非济南账号，无法使用", Toast.LENGTH_SHORT).show();
                     }
             }
         });

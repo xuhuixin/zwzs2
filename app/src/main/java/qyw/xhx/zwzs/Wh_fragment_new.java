@@ -35,6 +35,14 @@ public class Wh_fragment_new extends Fragment {
                 startActivity(intent);
             }
         });
+        Button ggl = (Button) getActivity().findViewById(R.id.ggl);
+        ggl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent("qyw.xhx.zwzs.ACTION_GGL");
+                startActivity(intent);
+            }
+        });
 
         Button dkm_chaxun = (Button) getActivity().findViewById(R.id.duankou);
         dkm_chaxun.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +69,15 @@ public class Wh_fragment_new extends Fragment {
 //                startActivity(new Intent(getActivity(), PayMoneyActivity.class));
             }
         });
+        Button zhongduan_chaxun = (Button) getActivity().findViewById(R.id.zdzy);
+        zhongduan_chaxun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent("qyw.xhx.zwzs.ACTION_ZDZY");
+                startActivity(intent);
+            }
+        });
+
     }
 
 

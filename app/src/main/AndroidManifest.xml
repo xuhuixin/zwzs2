@@ -76,6 +76,17 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <!--光功率查询-->
+        <activity android:name=".wh.Ggl_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_GGL"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wh.Ggl_ans_view"
+            android:theme="@style/AppTheme">
+        </activity>
         <!--端口满查询-->
         <activity android:name=".wh.Dkm_new_view"
             android:theme="@style/AppTheme">
@@ -114,7 +125,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
+        <!--终端资源查询-->
+        <activity android:name=".wh.Zdzy_new_view"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="qyw.xhx.zwzs.ACTION_ZDZY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <!--资源主界面-->
         <!--ONT下线核对-->
         <activity android:name=".zy.Olt_Ont_view"

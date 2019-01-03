@@ -50,7 +50,7 @@ import qyw.xhx.zwzs.zy.Zone_view;
 /**
  * 二维码扫描使用
  *
- * @author 刘红亮  2015年4月29日  下午5:49:45
+
  */
 public final class CommonScanActivity extends Activity implements ScanListener, View.OnClickListener {
     static final String TAG = CommonScanActivity.class.getSimpleName();
